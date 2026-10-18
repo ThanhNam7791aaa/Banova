@@ -1,114 +1,119 @@
 import React from 'react';
 
 export default function ScienceOverview({ onNavigate = () => {} }) {
-  const scienceFeatures = [
+  const steps = [
     {
-      id: 1,
-      badge: 'Prebiotic Thế Hệ Mới',
-      title: 'Nuôi dưỡng vi khuẩn có lợi',
-      description: 'Tinh bột kháng RS2 không bị phân hủy tại dạ dày, tiến thẳng xuống đại tràng để lên men thành Axit Béo Chuỗi Ngắn (SCFA) nuôi dưỡng hệ vi sinh microbiome khỏe mạnh.',
-      statLabel: 'Hiệu suất lên men',
-      statValue: '94% tại đại tràng',
-      icon: 'coronavirus',
-      iconBg: 'bg-secondary-container/40',
-      iconColor: 'text-secondary'
+      step: '01',
+      organ: 'Dạ Dày',
+      badge: 'Không phân hủy',
+      badgeColor: 'bg-surface-container-high text-primary',
+      icon: 'shield_with_heart',
+      summary: 'Kháng 100% acid dịch vị, giữ nguyên cấu trúc tinh thể B-type.'
     },
     {
-      id: 2,
-      badge: 'Chỉ số GI Thấp < 45',
-      title: 'Không gây vọt đường huyết',
-      description: 'Chỉ số đường huyết cực thấp, giải phóng năng lượng chậm rãi và ổn định, lý tưởng cho người cần kiểm soát đường huyết sau bữa ăn và hỗ trợ độ nhạy insulin.',
-      statLabel: 'Chỉ số đường huyết',
-      statValue: 'GI < 45 (An toàn)',
-      icon: 'show_chart',
-      iconBg: 'bg-primary-fixed/40',
-      iconColor: 'text-primary-container'
+      step: '02',
+      organ: 'Ruột Non',
+      badge: 'Bỏ qua enzyme',
+      badgeColor: 'bg-secondary-container text-secondary',
+      icon: 'fast_forward',
+      summary: 'Không bị amylase phân giải, không gây tăng đường huyết đột ngột.'
     },
     {
-      id: 3,
-      badge: 'Kích thích Peptide YY',
-      title: 'No lâu & Hỗ trợ vóc dáng',
-      description: 'Kích thích hormone peptide YY và GLP-1 tạo cảm giác no tự nhiên kéo dài 4-6 tiếng, giảm sự thèm ăn vặt mà không gây mệt mỏi hay thiếu hụt dưỡng chất thiết yếu.',
-      statLabel: 'Thời gian no tự nhiên',
-      statValue: '4 - 6 Giờ',
-      icon: 'speed',
-      iconBg: 'bg-tertiary-fixed/50',
-      iconColor: 'text-on-tertiary-container'
+      step: '03',
+      organ: 'Đại Tràng',
+      badge: 'Lên men kỵ khí',
+      badgeColor: 'bg-primary-container text-secondary-fixed',
+      icon: 'biotech',
+      summary: 'Lợi khuẩn Bifidobacterium lên men chậm rãi trong 24 giờ.'
+    },
+    {
+      step: '04',
+      organ: 'Sinh Butyrate',
+      badge: 'Phục hồi niêm mạc',
+      badgeColor: 'bg-secondary text-on-secondary',
+      icon: 'vital_signs',
+      summary: 'Tạo acid béo SCFA, kích hoạt GLP-1 no lâu và nuôi tế bào ruột.'
     }
   ];
 
   return (
-    <section className="w-full py-space-xl bg-surface-container-low">
+    <section className="w-full py-12 lg:py-16 bg-surface-container-low/60 border-y border-surface-container/60">
       <div className="max-w-7xl mx-auto px-gutter">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-space-xs mb-space-xl">
-          <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">
-            CƠ CHẾ Y SINH HỌC TỰ NHIÊN
-          </span>
-          <h2 className="font-headline-lg text-headline-lg text-primary font-bold tracking-tight">
-            Khoa học về Tinh Bột Kháng (Resistant Starch) đối với Đường Ruột
-          </h2>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            Không giống tinh bột thông thường phân giải thành đường glucose tại ruột non, Tinh bột kháng RS2 tự nhiên chuối xanh vượt qua tiêu hóa dạ dày để đến đại tràng trọn vẹn.
-          </p>
-        </div>
-
-        {/* 3 Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter-lg">
-          {scienceFeatures.map((item) => (
-            <div 
-              key={item.id} 
-              className="relative p-space-lg rounded-2xl bg-surface-container-lowest shadow-md flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 border border-surface-container/40"
-            >
-              <div className="space-y-space-md">
-                <div className={`w-14 h-14 rounded-2xl ${item.iconBg} flex items-center justify-center ${item.iconColor}`}>
-                  <span className="material-symbols-outlined text-[32px]">{item.icon}</span>
-                </div>
-                <div className="space-y-space-xs">
-                  <span className="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">
-                    {item.badge}
-                  </span>
-                  <h3 className="font-headline-sm text-headline-sm text-primary font-bold">
-                    {item.title}
-                  </h3>
-                </div>
-                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-
-              <div className="mt-space-md pt-space-sm flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm border-t border-surface-container">
-                <span>{item.statLabel}</span>
-                <span className="font-bold text-secondary">{item.statValue}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Biological Diagram Mini Strip */}
-        <div className="mt-space-xl p-space-md rounded-2xl bg-surface-container-lowest shadow-xs flex flex-col lg:flex-row items-center justify-between gap-space-md border border-surface-container">
-          <div className="flex items-center gap-space-md">
-            <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-on-secondary shrink-0 shadow-xs">
-              <span className="material-symbols-outlined text-[24px]">science</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-headline-sm text-label-lg font-bold text-primary">
-                Chứng nhận phân tích hàm lượng độc lập
-              </span>
-              <span className="font-body-sm text-body-sm text-on-surface-variant">
-                Kiểm nghiệm định kỳ tại Trung tâm Kỹ thuật Tiêu chuẩn Đo lường Chất lượng 3 (QUATEST 3).
-              </span>
-            </div>
+        
+        {/* Layout Header 2 cột phá vỡ sự rập khuôn */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
+          <div className="space-y-1.5 max-w-xl">
+            <span className="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+              Cơ chế chuyển hóa sinh học
+            </span>
+            <h2 className="font-headline-lg text-headline-lg text-primary font-extrabold tracking-tight">
+              Hành Trình RS2 Đi Qua Hệ Tiêu Hóa
+            </h2>
           </div>
-          <button 
-            type="button"
-            onClick={() => onNavigate('goc-khoa-hoc')}
-            className="inline-flex items-center gap-1.5 font-label-lg text-label-lg text-secondary hover:text-primary font-bold shrink-0 transition-colors"
-          >
-            <span>Xem tài liệu nghiên cứu y khoa</span>
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <p className="font-body-sm text-body-sm text-on-surface-variant max-w-md hidden sm:block">
+              Khác với tinh bột thường biến thành đường ở ruột non, Tinh bột kháng Banova đi thẳng xuống đại tràng để nuôi dưỡng vi sinh.
+            </p>
+            <button
+              type="button"
+              onClick={() => onNavigate('goc-khoa-hoc')}
+              className="inline-flex items-center gap-1 text-secondary font-label-md font-bold hover:underline shrink-0 cursor-pointer"
+            >
+              <span>Xem tài liệu y khoa</span>
+              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </div>
         </div>
+
+        {/* SƠ ĐỒ 1 DÒNG TRỰC QUAN (Nhìn 3 giây là hiểu) */}
+        <div className="relative">
+          {/* Đường line kết nối chạy ngầm trên desktop */}
+          <div className="hidden lg:block absolute top-1/2 left-8 right-8 -translate-y-1/2 h-0.5 bg-surface-container-highest z-0" />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+            {steps.map((item, index) => (
+              <div 
+                key={item.step}
+                className="p-5 rounded-2xl bg-surface-container-lowest shadow-xs hover:shadow-md transition-all border border-surface-container flex flex-col justify-between space-y-4 group"
+              >
+                {/* Top: Số bước & Icon */}
+                <div className="flex items-center justify-between">
+                  <span className="font-headline-sm text-headline-sm text-outline-variant font-mono font-bold group-hover:text-secondary transition-colors">
+                    {item.step}
+                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary group-hover:bg-secondary group-hover:text-on-secondary transition-all shadow-xs">
+                    <span className="material-symbols-outlined text-[22px]">{item.icon}</span>
+                  </div>
+                </div>
+
+                {/* Giữa: Tên vị trí & Badge trạng thái */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-label-lg text-label-lg font-bold text-primary">
+                      {item.organ}
+                    </h3>
+                    <span className={`font-label-sm text-[11px] font-bold px-2 py-0.5 rounded-full ${item.badgeColor}`}>
+                      {item.badge}
+                    </span>
+                  </div>
+                  {/* Dưới: Mô tả 1 dòng ngắn */}
+                  <p className="font-body-sm text-[13px] text-on-surface-variant leading-relaxed">
+                    {item.summary}
+                  </p>
+                </div>
+
+                {/* Bottom connector indicator for mobile/tablet */}
+                {index < steps.length - 1 && (
+                  <div className="flex lg:hidden justify-center pt-1 text-outline-variant">
+                    <span className="material-symbols-outlined text-[18px]">south</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );

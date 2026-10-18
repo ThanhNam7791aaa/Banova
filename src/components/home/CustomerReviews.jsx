@@ -28,82 +28,80 @@ export default function CustomerReviews() {
     }
   ];
 
-  const standards = [
+  // GỘP TẤT CẢ TIÊU CHUẨN VÀO 1 DẢI BẢO CHỨNG DUY NHẤT VÀ MẠNH NHẤT
+  const certifications = [
     {
-      id: 'std-1',
-      icon: 'eco',
-      title: '100% Nguồn Gốc Tự Nhiên',
-      desc: 'Không pha trộn tinh bột phụ'
-    },
-    {
-      id: 'std-2',
+      id: 'cert-1',
       icon: 'verified',
-      title: 'Chuối Xanh Chuẩn OCOP',
-      desc: 'Vùng nguyên liệu sạch Gia Lai'
+      title: 'HACCP & ISO 22000',
+      desc: 'Quy chuẩn an toàn chế biến thực phẩm y sinh quốc tế'
     },
     {
-      id: 'std-3',
+      id: 'cert-2',
+      icon: 'eco',
+      title: 'OCOP 4 Sao Gia Lai',
+      desc: 'Nông sản chuối xanh đất đỏ bazan vùng Đak Đoa'
+    },
+    {
+      id: 'cert-3',
+      icon: 'science',
+      title: 'Kiểm Định QUATEST 3',
+      desc: 'Định lượng hoạt tính kháng tinh bột RS2 độc lập'
+    },
+    {
+      id: 'cert-4',
       icon: 'block',
-      title: '0% Chất Bảo Quản',
-      desc: 'Không chất tạo màu hay hương liệu'
-    },
-    {
-      id: 'std-4',
-      icon: 'biotech',
-      title: 'Đã Kiểm Nghiệm RS2',
-      desc: 'Phân tích độc lập tại phòng lab'
+      title: '100% Tự Nhiên (0% Phụ Gia)',
+      desc: 'Không đường tinh luyện, không chất bảo quản'
     }
   ];
 
   return (
-    <section className="w-full py-space-xl bg-surface-container-low">
+    <section className="w-full py-12 lg:py-16 bg-surface-container-low/50">
       <div className="max-w-7xl mx-auto px-gutter">
-        {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto space-y-space-xs mb-space-xl">
-          <span className="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-bold">
-            CÂU CHUYỆN KHÁCH HÀNG THỰC TẾ
-          </span>
-          <h2 className="font-headline-lg text-headline-lg text-primary font-bold tracking-tight">
-            Khách hàng nói gì về trải nghiệm Banova tại Quy Nhơn &amp; Toàn quốc
-          </h2>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            Hành trình phục hồi hệ tiêu hóa và cân bằng trao đổi chất từ các khách hàng đã tin tưởng đồng hành cùng chuối xanh Gia Lai.
+        
+        {/* Header phá vỡ rập khuôn: Căn trái kết hợp rating badge */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center text-on-tertiary-container">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    star
+                  </span>
+                ))}
+              </div>
+              <span className="font-label-md text-label-md font-bold text-primary">4.9/5 Đánh giá thực tế</span>
+            </div>
+            <h2 className="font-headline-lg text-headline-md sm:text-headline-lg text-primary font-extrabold tracking-tight">
+              Phản Hồi Từ Người Dùng Banova Hằng Ngày
+            </h2>
+          </div>
+          <p className="font-body-sm text-body-sm text-on-surface-variant max-w-md">
+            Câu chuyện cải thiện chức năng tiêu hóa và giữ nhịp trao đổi chất ổn định từ khách hàng tại Quy Nhơn và các tỉnh thành.
           </p>
         </div>
 
         {/* 3 Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter-lg mb-space-xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           {reviews.map((item) => (
             <div 
               key={item.id} 
-              className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-md flex flex-col justify-between space-y-space-md border border-surface-container/40"
+              className="p-5 rounded-2xl bg-surface-container-lowest shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4 border border-surface-container"
             >
-              <div className="space-y-space-sm">
-                <div className="flex items-center gap-1 text-on-tertiary-container">
-                  {[...Array(5)].map((_, i) => (
-                    <span 
-                      key={i} 
-                      className="material-symbols-outlined text-[18px]" 
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    >
-                      star
-                    </span>
-                  ))}
-                </div>
-                <p className="font-body-md text-body-md text-on-surface italic leading-relaxed">
-                  {item.content}
-                </p>
-              </div>
+              <p className="font-body-md text-body-sm text-on-surface italic leading-relaxed">
+                {item.content}
+              </p>
 
-              <div className="flex items-center gap-3 pt-space-xs border-t border-surface-container/50">
-                <div className={`w-10 h-10 rounded-full ${item.avatarBg} flex items-center justify-center font-bold font-headline-sm shrink-0`}>
+              <div className="flex items-center gap-3 pt-3 border-t border-surface-container/60">
+                <div className={`w-9 h-9 rounded-full ${item.avatarBg} flex items-center justify-center font-bold text-sm shrink-0`}>
                   {item.avatarChar}
                 </div>
                 <div>
-                  <h4 className="font-label-lg text-label-lg font-bold text-primary">
+                  <h4 className="font-label-md text-label-md font-bold text-primary">
                     {item.name}
                   </h4>
-                  <p className="font-body-sm text-[12px] text-on-surface-variant">
+                  <p className="font-body-sm text-[11px] text-on-surface-variant">
                     {item.ageAndJob}
                   </p>
                 </div>
@@ -112,27 +110,33 @@ export default function CustomerReviews() {
           ))}
         </div>
 
-        {/* Trust Badges Strip */}
-        <div className="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-surface-container">
-          <div className="text-center font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-bold mb-space-md">
-            TIÊU CHUẨN KIỂM SOÁT CHẤT LƯỢNG BANOVA
+        {/* DẢI BẢO CHỨNG DUY NHẤT & MẠNH NHẤT TOÀN TRANG (Gộp từ các chip trùng lặp) */}
+        <div className="p-6 rounded-2xl bg-surface-container-lowest shadow-sm border border-secondary/25">
+          <div className="text-center mb-6">
+            <span className="font-label-sm text-[11px] uppercase tracking-widest text-secondary font-bold bg-secondary-container/50 px-3 py-1 rounded-full">
+              HỆ THỐNG TIÊU CHUẨN KIỂM SOÁT CHẤT LƯỢNG BANOVA
+            </span>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center">
-            {standards.map((std) => (
-              <div key={std.id} className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 rounded-full bg-secondary-container/40 flex items-center justify-center text-secondary">
-                  <span className="material-symbols-outlined text-[24px]">{std.icon}</span>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {certifications.map((cert) => (
+              <div key={cert.id} className="flex items-start gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-secondary-container/40 flex items-center justify-center text-secondary shrink-0 shadow-2xs">
+                  <span className="material-symbols-outlined text-[24px]">{cert.icon}</span>
                 </div>
-                <h5 className="font-headline-sm text-body-md font-bold text-primary">
-                  {std.title}
-                </h5>
-                <p className="font-body-sm text-[12px] text-on-surface-variant">
-                  {std.desc}
-                </p>
+                <div className="space-y-0.5">
+                  <h4 className="font-label-md text-label-md font-bold text-primary">
+                    {cert.title}
+                  </h4>
+                  <p className="font-body-sm text-[12px] text-on-surface-variant leading-snug">
+                    {cert.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         </div>
+
       </div>
     </section>
   );
