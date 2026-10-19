@@ -1,25 +1,35 @@
 import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useCartStore } from '../../store/cartStore';
 
-export default function Header({ 
-  currentPath = 'trang-chu', 
-  onNavigate = () => {}, 
-  cartCount = 2,
-  onOpenCart = () => {}
-}) {
+export default function Header({ onOpenCart }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const storeCartCount = useCartStore((state) => state.getTotalCount());
 
   const navLinks = [
-    { id: 'trang-chu', label: 'Trang chủ' },
-    { id: 'san-pham', label: 'Sản phẩm' },
-    { id: 'goc-khoa-hoc', label: 'Góc khoa học' },
-    { id: 'quiz-tu-van', label: 'Quiz tư vấn' },
-    { id: 'lien-he', label: 'Liên hệ' }
+    { path: '/', label: 'Trang chủ' },
+    { path: '/san-pham', label: 'Sản phẩm' },
+    { path: '/khoa-hoc', label: 'Góc khoa học' },
+    { path: '/quiz', label: 'Quiz tư vấn' },
+    { path: '/faq', label: 'Hỏi đáp' },
+    { path: '/lien-he', label: 'Liên hệ' }
   ];
 
-  const handleNavClick = (path, e) => {
-    e.preventDefault();
-    onNavigate(path);
-    setMobileMenuOpen(false);
+  const handleCartClick = () => {
+    if (onOpenCart) {
+      onOpenCart();
+    } else {
+      navigate('/gio-hang');
+    }
+  };
+
+  const isLinkActive = (itemPath) => {
+    if (itemPath === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(itemPath);
   };
 
   return (
@@ -27,10 +37,9 @@ export default function Header({
       <div className="h-20 max-w-7xl mx-auto px-gutter flex items-center justify-between gap-space-md">
         {/* Brand Logo */}
         <div className="flex items-center gap-space-md">
-          <a 
-            className="flex items-center gap-space-sm group" 
-            href="#" 
-            onClick={(e) => handleNavClick('trang-chu', e)}
+          <Link 
+            to="/" 
+            className="flex items-center gap-space-sm group"
           >
             <img 
               alt="Banova Logo" 
@@ -45,26 +54,25 @@ export default function Header({
                 Gia Lai Natural RS2
               </span>
             </div>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-space-xs p-1 rounded-xl bg-surface-container-low/70">
           {navLinks.map((link) => {
-            const isActive = currentPath === link.id;
+            const active = isLinkActive(link.path);
             return (
-              <a
-                key={link.id}
-                href={`#${link.id}`}
-                onClick={(e) => handleNavClick(link.id, e)}
+              <Link
+                key={link.path}
+                to={link.path}
                 className={`font-label-lg text-label-lg px-space-md py-space-sm rounded-lg transition-all ${
-                  isActive
+                  active
                     ? 'bg-primary-container text-on-primary font-bold shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
                 }`}
               >
                 {link.label}
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -72,42 +80,45 @@ export default function Header({
         {/* Action Controls */}
         <div className="flex items-center gap-space-sm">
           {/* Search Trigger */}
-          <button 
-            type="button"
+          <Link
+            to="/khoa-hoc"
             aria-label="Tìm kiếm thông tin khoa học" 
             className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined text-[22px]">search</span>
-          </button>
+          </Link>
 
           {/* Cart Trigger */}
           <button 
             type="button"
             aria-label="Giỏ hàng dinh dưỡng" 
-            onClick={onOpenCart}
+            onClick={handleCartClick}
             className="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
-            {cartCount > 0 && (
+            {storeCartCount > 0 && (
               <span className="absolute top-1 right-1 flex items-center justify-center w-5 h-5 rounded-full bg-secondary text-on-secondary font-label-sm text-[10px] ring-2 ring-surface-container-lowest font-bold shadow-xs">
-                {cartCount}
+                {storeCartCount}
               </span>
             )}
           </button>
 
           {/* CTA Nutrition Quiz */}
-          <a 
-            className="hidden sm:inline-flex items-center justify-center px-space-lg py-space-sm rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-xs hover:bg-primary transition-all duration-200" 
-            href="#quiz-tu-van"
-            onClick={(e) => handleNavClick('quiz-tu-van', e)}
+          <Link 
+            to="/quiz"
+            className="hidden sm:inline-flex items-center justify-center px-space-lg py-space-sm rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-xs hover:bg-primary transition-all duration-200"
           >
             Tư vấn dinh dưỡng
-          </a>
+          </Link>
 
           {/* User Profile */}
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity">
+          <Link
+            to="/lien-he"
+            aria-label="Tài khoản khách hàng"
+            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+          >
             <span className="material-symbols-outlined text-on-primary text-[18px]">person</span>
-          </div>
+          </Link>
 
           {/* Mobile Menu Hamburger */}
           <button 
@@ -127,27 +138,27 @@ export default function Header({
       {mobileMenuOpen && (
         <div className="lg:hidden w-full bg-surface-container-lowest border-b border-surface-container px-gutter py-space-md space-y-2 animate-in fade-in slide-in-from-top-4 duration-200">
           {navLinks.map((link) => (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              onClick={(e) => handleNavClick(link.id, e)}
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => setMobileMenuOpen(false)}
               className={`block px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-colors ${
-                currentPath === link.id
+                isLinkActive(link.path)
                   ? 'bg-primary-container text-on-primary font-bold'
                   : 'text-on-surface-variant hover:bg-surface-container'
               }`}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <div className="pt-2 sm:hidden">
-            <a
-              href="#quiz-tu-van"
-              onClick={(e) => handleNavClick('quiz-tu-van', e)}
+            <Link
+              to="/quiz"
+              onClick={() => setMobileMenuOpen(false)}
               className="w-full flex items-center justify-center py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-bold"
             >
               Tư vấn dinh dưỡng
-            </a>
+            </Link>
           </div>
         </div>
       )}

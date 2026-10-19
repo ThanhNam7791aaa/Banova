@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { contactService } from '../../services/contactService';
 
-export default function Footer({ onNavigate = () => {} }) {
+export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault();
     if (email.trim()) {
-      // Giả lập gửi bản tin (sau này nối API POST /api/newsletter)
-      setSubscribed(true);
-      setTimeout(() => setSubscribed(false), 4000);
-      setEmail('');
+      setLoading(true);
+      try {
+        await contactService.subscribeNewsletter(email.trim());
+        setSubscribed(true);
+        setTimeout(() => setSubscribed(false), 4000);
+        setEmail('');
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -20,7 +30,7 @@ export default function Footer({ onNavigate = () => {} }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter-lg pb-space-xl">
           {/* Cột 1: Thông tin thương hiệu */}
           <div className="space-y-space-md">
-            <div className="flex items-center gap-space-sm">
+            <Link to="/" className="flex items-center gap-space-sm group">
               <div className="w-9 h-9 rounded-xl bg-secondary-container flex items-center justify-center">
                 <span className="material-symbols-outlined text-on-secondary-container text-[22px]">
                   nutrition
@@ -29,7 +39,7 @@ export default function Footer({ onNavigate = () => {} }) {
               <span className="font-headline-sm text-headline-sm text-on-primary font-bold tracking-tight">
                 BANOVA
               </span>
-            </div>
+            </Link>
             <p className="font-body-sm text-body-sm text-on-primary-container leading-relaxed">
               Dinh dưỡng đột phá từ vùng đất Gia Lai bạt ngàn tự nhiên, giàu kháng tinh bột RS2 tự nhiên hỗ trợ hệ vi sinh microbiome khỏe mạnh và chuyển hóa bền vững.
             </p>
@@ -68,93 +78,94 @@ export default function Footer({ onNavigate = () => {} }) {
             </h3>
             <ul className="space-y-space-sm font-body-sm text-body-sm text-on-primary-container">
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#san-pham"
-                  onClick={() => onNavigate('san-pham')}
+                  to="/san-pham"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
                   Bột tinh bột kháng nguyên chất RS2
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#san-pham"
-                  onClick={() => onNavigate('san-pham')}
+                  to="/san-pham"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                  Bánh quy dinh dưỡng Prebiotic Banova
-                </a>
+                  Combo Liệu trình chuyên sâu 60 ngày
+                </Link>
               </li>
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#san-pham"
-                  onClick={() => onNavigate('san-pham')}
+                  to="/san-pham"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                  Hộp bữa sáng dinh dưỡng Gut-Health
-                </a>
+                  Hộp 10 gói 15g tiện lợi văn phòng
+                </Link>
               </li>
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#san-pham"
-                  onClick={() => onNavigate('san-pham')}
+                  to="/san-pham"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                  Hộp quà sức khỏe cao cấp Gia Lai
-                </a>
+                  Bánh quy yến mạch Prebiotic Banova
+                </Link>
               </li>
             </ul>
           </div>
 
-          {/* Cột 3: Hỗ trợ khách hàng */}
+          {/* Cột 3: Hỗ trợ khách hàng - Không còn link chết */}
           <div className="space-y-space-md">
             <h3 className="font-label-lg text-label-lg text-on-primary uppercase tracking-wider font-bold">
               Hỗ trợ khách hàng
             </h3>
             <ul className="space-y-space-sm font-body-sm text-body-sm text-on-primary-container">
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#goc-khoa-hoc"
-                  onClick={() => onNavigate('goc-khoa-hoc')}
+                  to="/faq"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
                   Câu hỏi thường gặp (FAQ)
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#lien-he"
-                  onClick={() => onNavigate('lien-he')}
+                  to="/dat-hang"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
                   Hướng dẫn đặt hàng &amp; thanh toán
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#lien-he"
-                  onClick={() => onNavigate('lien-he')}
+                  to="/lien-he"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
                   Chính sách giao hàng Quy Nhơn &amp; Toàn quốc
-                </a>
+                </Link>
               </li>
               <li>
-                <a 
+                <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
-                  href="#lien-he"
-                  onClick={() => onNavigate('lien-he')}
+                  to="/lien-he"
                 >
                   <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-                  Chính sách đổi trả &amp; hoàn tiền
-                </a>
+                  Chính sách đổi trả &amp; hoàn tiền 15 ngày
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
+                  to="/quiz"
+                >
+                  <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                  Quiz tư vấn tình trạng đường ruột
+                </Link>
               </li>
             </ul>
           </div>
@@ -178,10 +189,11 @@ export default function Footer({ onNavigate = () => {} }) {
                   required
                 />
                 <button 
-                  className="w-full h-11 px-space-md rounded-xl bg-secondary text-on-secondary font-label-lg text-label-lg font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors" 
+                  disabled={loading}
+                  className="w-full h-11 px-space-md rounded-xl bg-secondary text-on-secondary font-label-lg text-label-lg font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors flex items-center justify-center gap-2" 
                   type="submit"
                 >
-                  {subscribed ? '✓ Đã đăng ký thành công!' : 'Đăng ký ngay'}
+                  {loading ? 'Đang đăng ký...' : subscribed ? '✓ Đã đăng ký thành công!' : 'Đăng ký ngay'}
                 </button>
               </div>
             </form>
@@ -196,13 +208,13 @@ export default function Footer({ onNavigate = () => {} }) {
         <div className="pt-space-lg border-t border-primary-container flex flex-col md:flex-row items-center justify-between gap-space-md text-on-primary-container font-body-sm text-body-sm">
           <p>© 2026 Banova. Bản quyền thuộc về Banova Việt Nam. Dinh dưỡng tự nhiên từ chuối xanh Gia Lai.</p>
           <div className="flex items-center gap-space-sm">
-            <a aria-label="Facebook" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="#">
+            <a aria-label="Facebook" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://facebook.com" target="_blank" rel="noreferrer">
               <span className="material-symbols-outlined text-[18px]">public</span>
             </a>
-            <a aria-label="Zalo" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="#">
+            <a aria-label="Zalo" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://zalo.me" target="_blank" rel="noreferrer">
               <span className="material-symbols-outlined text-[18px]">chat</span>
             </a>
-            <a aria-label="YouTube" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="#">
+            <a aria-label="YouTube" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://youtube.com" target="_blank" rel="noreferrer">
               <span className="material-symbols-outlined text-[18px]">smart_display</span>
             </a>
           </div>

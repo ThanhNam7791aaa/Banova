@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -7,235 +8,220 @@ import QuizPage from './pages/QuizPage';
 import CheckoutPage from './pages/CheckoutPage';
 import SciencePage from './pages/SciencePage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
+import ContactPage from './pages/ContactPage';
+import FaqPage from './pages/FaqPage';
+import { useCartStore } from './store/cartStore';
 
-const INITIAL_CART_ITEMS = [
-  {
-    id: 'prod-01',
-    name: 'Bột Tinh Bột Kháng Banova Tự Nhiên 500g',
-    price: 159000,
-    weight: '500g',
-    rsTag: '5.8g RS2/khẩu phần',
-    description: 'Hũ thủy tinh trung tính bảo toàn cấu trúc vi sinh RS2',
-    quantity: 1,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBsLeH_7AMePXKa6uSLLev1jV9T_4loFtxndS9sHFFEDuzsWanDShb-RtfeYBBL0zNt91LmuBghISC7aO3cGDLyBWYhOx3T6cRUIcfW_8fpWsSdjqTxgKnjzRFNYiPP2mBjeqhm6r2HcYCFaqB6uFKI91eTBYOSW5KAHvC9P0qheigZW7iKLeO7IVUBZkD7h4rNXXE97F9cydjSn45kh-cXkUShYz4SMHSL33o-1K6-Rv7qs3MgDBQR'
-  },
-  {
-    id: 'prod-03',
-    name: 'Bột Banova Hộp 10 Gói 15g Tiện Lợi',
-    price: 69000,
-    weight: '10 Gói',
-    rsTag: 'Tiện dụng văn phòng',
-    description: 'Gói chia liều lượng chuẩn, hòa tan nhanh với sinh tố hoặc nước ấm',
-    quantity: 1,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCrMX4CUMxJBtX2NtIrLRHdUr4SobsQ8mCYCaHnfjZ8UanKK5OrshjuWsVRnjxMaxBUr-IJ3wrakzhUf9l5fV0y1LpOKRrEjlj09ZfLJIbFhup7nv8WMe0utTDOcp9eCdANmvN6FI_DHoZhMNsBioZg6JUzhtVYEi1L8bZNb-Wjc_1EHd8lDE8ByONQjmP50pXPh7bKL5atginuEXHXsmfcW-2II5LQyzdzjrMO62nTQ7A8oOeCF0MZ'
-  }
-];
+/**
+ * Tự động cuộn lên đầu trang khi thay đổi URL
+ */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
+
+  return null;
+}
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState('trang-chu');
-  const [cartItems, setCartItems] = useState(INITIAL_CART_ITEMS);
-  const [toastMessage, setToastMessage] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Lấy state và action từ Zustand Store (lưu bền vững qua localStorage)
+  const {
+    cartItems,
+    toastMessage,
+    hideToast,
+    addItem,
+    updateQuantity,
+    removeItem,
+    clearCart,
+    resetDemoCart,
+    getTotalCount
+  } = useCartStore();
+
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
 
-  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
-
+  /**
+   * Adapter tương thích ngược cho các component cũ vẫn gọi onNavigate(path)
+   */
   const handleNavigate = (path) => {
-    setCurrentPath(path);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleAddToCart = (product) => {
-    const qty = product.quantity || 1;
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + qty } : item
-        );
-      }
-      return [
-        ...prev,
-        {
-          id: product.id || `prod-${Date.now()}`,
-          name: product.name,
-          price: product.price || 159000,
-          weight: product.weight || product.spec || 'Quy chuẩn',
-          rsTag: product.rsTag || product.rsBadge || 'Chuẩn RS2 Gia Lai',
-          description: product.description || 'Sản phẩm dinh dưỡng kháng tinh bột RS2',
-          quantity: qty,
-          image: product.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBsLeH_7AMePXKa6uSLLev1jV9T_4loFtxndS9sHFFEDuzsWanDShb-RtfeYBBL0zNt91LmuBghISC7aO3cGDLyBWYhOx3T6cRUIcfW_8fpWsSdjqTxgKnjzRFNYiPP2mBjeqhm6r2HcYCFaqB6uFKI91eTBYOSW5KAHvC9P0qheigZW7iKLeO7IVUBZkD7h4rNXXE97F9cydjSn45kh-cXkUShYz4SMHSL33o-1K6-Rv7qs3MgDBQR'
-        }
-      ];
-    });
-    showToast(`Đã thêm ${qty} "${product.name}" vào giỏ hàng!`);
-  };
-
-  const handleUpdateCartQty = (id, delta) => {
-    setCartItems((prev) =>
-      prev
-        .map((item) => {
-          if (item.id === id) {
-            const newQty = item.quantity + delta;
-            return newQty > 0 ? { ...item, quantity: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean)
-    );
-  };
-
-  const handleRemoveCartItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-    showToast('Đã xóa sản phẩm khỏi giỏ hàng.');
-  };
-
-  const handleClearCart = () => {
-    setCartItems([]);
-    showToast('Đã dọn sạch giỏ hàng.');
-  };
-
-  const handleResetDemoCart = () => {
-    setCartItems(INITIAL_CART_ITEMS);
-    showToast('Đã khôi phục giỏ hàng mẫu.');
-  };
-
-  const handleSelectProduct = (product) => {
-    setSelectedProduct(product);
-    setCurrentPath('san-pham-chi-tiet');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!path) return;
+    if (path.startsWith('/')) {
+      navigate(path);
+      return;
+    }
+    const routeMap = {
+      'trang-chu': '/',
+      'san-pham': '/san-pham',
+      'san-pham-chi-tiet': selectedProduct ? `/san-pham/${selectedProduct.slug || selectedProduct.id}` : '/san-pham',
+      'quiz-tu-van': '/quiz',
+      'quiz': '/quiz',
+      'gio-hang': '/gio-hang',
+      'dat-hang': '/dat-hang',
+      'khoa-hoc': '/khoa-hoc',
+      'goc-khoa-hoc': '/khoa-hoc',
+      'goc-khoa-hoc-chi-tiet': selectedArticle ? `/khoa-hoc/${selectedArticle.slug || selectedArticle.id}` : '/khoa-hoc',
+      'lien-he': '/lien-he',
+      'faq': '/faq'
+    };
+    navigate(routeMap[path] || '/');
   };
 
   const handleOpenCart = () => {
-    handleNavigate('gio-hang');
+    navigate('/gio-hang');
   };
 
   return (
-    <MainLayout
-      currentPath={currentPath}
-      onNavigate={handleNavigate}
-      cartCount={cartCount}
-      onOpenCart={handleOpenCart}
-    >
-      {/* Toast thông báo nhanh */}
-      {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 px-space-md py-3 rounded-xl bg-primary text-on-primary shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-300 border border-secondary-fixed/30">
-          <span className="material-symbols-outlined text-secondary-fixed text-[20px]">check_circle</span>
-          <span className="font-label-md text-label-md font-semibold">{toastMessage}</span>
-        </div>
-      )}
-
-      {/* 1. Trang Chủ */}
-      {currentPath === 'trang-chu' && (
-        <HomePage 
-          onNavigate={handleNavigate} 
-          onAddToCart={handleAddToCart}
-        />
-      )}
-
-      {/* 2. Trang Danh Sách Sản Phẩm (Catalog) */}
-      {currentPath === 'san-pham' && (
-        <CatalogPage
-          onNavigate={handleNavigate}
-          onAddToCart={handleAddToCart}
-          onSelectProduct={handleSelectProduct}
-        />
-      )}
-
-      {/* 3. Trang Chi Tiết Sản Phẩm (Product Detail) */}
-      {currentPath === 'san-pham-chi-tiet' && (
-        <ProductDetailPage
-          product={selectedProduct}
-          onNavigate={handleNavigate}
-          onAddToCart={handleAddToCart}
-        />
-      )}
-
-      {/* 4. Trang Quiz Tư Vấn Sức Khỏe (Health Quiz) */}
-      {currentPath === 'quiz-tu-van' && (
-        <QuizPage
-          onNavigate={handleNavigate}
-          onAddToCart={handleAddToCart}
-        />
-      )}
-
-      {/* 5. Trang Giỏ Hàng & Đặt Hàng Thanh Toán (Checkout Flow) */}
-      {(currentPath === 'gio-hang' || currentPath === 'dat-hang') && (
-        <CheckoutPage
-          cartItems={cartItems}
-          onUpdateQty={handleUpdateCartQty}
-          onRemoveItem={handleRemoveCartItem}
-          onClearCart={handleClearCart}
-          onResetDemoCart={handleResetDemoCart}
-          onNavigate={handleNavigate}
-          initialStep={currentPath === 'dat-hang' ? 2 : 1}
-        />
-      )}
-
-      {/* 6. Trang Góc Khoa Học & Blog (Science Hub) */}
-      {(currentPath === 'goc-khoa-hoc' || currentPath === 'khoa-hoc') && (
-        <SciencePage
-          onNavigate={handleNavigate}
-          onSelectArticle={(art) => {
-            setSelectedArticle(art);
-            setCurrentPath('goc-khoa-hoc-chi-tiet');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-        />
-      )}
-
-      {/* 7. Trang Chi Tiết Bài Báo Khoa Học (Article Detail) */}
-      {currentPath === 'goc-khoa-hoc-chi-tiet' && (
-        <ArticleDetailPage
-          article={selectedArticle}
-          onNavigate={handleNavigate}
-          onAddToCart={handleAddToCart}
-        />
-      )}
-
-      {/* 8. Màn hình tạm cho các route đang tiếp tục phát triển */}
-      {currentPath !== 'trang-chu' && 
-       currentPath !== 'san-pham' && 
-       currentPath !== 'san-pham-chi-tiet' && 
-       currentPath !== 'quiz-tu-van' && 
-       currentPath !== 'gio-hang' && 
-       currentPath !== 'dat-hang' && 
-       currentPath !== 'goc-khoa-hoc' && 
-       currentPath !== 'khoa-hoc' && 
-       currentPath !== 'goc-khoa-hoc-chi-tiet' && (
-        <div className="max-w-7xl mx-auto px-gutter py-24 text-center">
-          <div className="p-space-xl rounded-3xl bg-surface-container-lowest shadow-sm max-w-xl mx-auto space-y-4 border border-surface-container">
-            <span className="material-symbols-outlined text-secondary text-[48px]">construction</span>
-            <h2 className="font-headline-md text-headline-md text-primary font-bold">
-              Phân hệ đang xây dựng
-            </h2>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              Bạn đang ở phân hệ: <strong className="text-secondary">{currentPath}</strong>. Sẵn sàng nhận mã HTML từ Stitch để tiếp tục chuyển đổi!
-            </p>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => handleNavigate('quiz-tu-van')}
-                className="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-secondary text-on-secondary font-label-lg font-bold shadow-xs hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors"
-              >
-                Làm Quiz Tư Vấn
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavigate('goc-khoa-hoc')}
-                className="inline-flex items-center gap-2 px-space-md py-2.5 rounded-xl bg-primary text-on-primary font-label-lg font-bold shadow-xs hover:bg-primary-container transition-colors"
-              >
-                Góc Khoa Học
-              </button>
-            </div>
+    <>
+      <ScrollToTop />
+      <MainLayout
+        currentPath={location.pathname}
+        onNavigate={handleNavigate}
+        cartCount={getTotalCount()}
+        onOpenCart={handleOpenCart}
+      >
+        {/* Toast thông báo toàn cục */}
+        {toastMessage && (
+          <div 
+            onClick={hideToast}
+            className="fixed bottom-6 right-6 z-50 px-space-md py-3 rounded-xl bg-primary text-on-primary shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-300 border border-secondary-fixed/30 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-secondary-fixed text-[20px]">check_circle</span>
+            <span className="font-label-md text-label-md font-semibold">{toastMessage}</span>
           </div>
-        </div>
-      )}
-    </MainLayout>
+        )}
+
+        {/* Hệ thống Routing Thật bằng React Router */}
+        <Routes>
+          {/* 1. Trang Chủ */}
+          <Route 
+            path="/" 
+            element={
+              <HomePage 
+                onNavigate={handleNavigate} 
+                onAddToCart={addItem} 
+              />
+            } 
+          />
+
+          {/* 2. Danh Sách Sản Phẩm (Catalog) */}
+          <Route 
+            path="/san-pham" 
+            element={
+              <CatalogPage 
+                onNavigate={handleNavigate}
+                onAddToCart={addItem}
+                onSelectProduct={(product) => {
+                  setSelectedProduct(product);
+                  navigate(`/san-pham/${product.slug || product.id}`);
+                }}
+              />
+            } 
+          />
+
+          {/* 3. Chi Tiết Sản Phẩm */}
+          <Route 
+            path="/san-pham/:slug" 
+            element={
+              <ProductDetailPage 
+                product={selectedProduct}
+                onNavigate={handleNavigate}
+                onAddToCart={addItem}
+              />
+            } 
+          />
+
+          {/* 4. Quiz Tư Vấn Sức Khỏe */}
+          <Route 
+            path="/quiz" 
+            element={
+              <QuizPage 
+                onNavigate={handleNavigate}
+                onAddToCart={addItem}
+              />
+            } 
+          />
+          <Route path="/quiz-tu-van" element={<Navigate to="/quiz" replace />} />
+
+          {/* 5. Giỏ Hàng */}
+          <Route 
+            path="/gio-hang" 
+            element={
+              <CheckoutPage
+                cartItems={cartItems}
+                onUpdateQty={updateQuantity}
+                onRemoveItem={removeItem}
+                onClearCart={clearCart}
+                onResetDemoCart={resetDemoCart}
+                onNavigate={handleNavigate}
+                initialStep={1}
+              />
+            } 
+          />
+
+          {/* 6. Đặt Hàng & Thanh Toán (Checkout) */}
+          <Route 
+            path="/dat-hang" 
+            element={
+              <CheckoutPage
+                cartItems={cartItems}
+                onUpdateQty={updateQuantity}
+                onRemoveItem={removeItem}
+                onClearCart={clearCart}
+                onResetDemoCart={resetDemoCart}
+                onNavigate={handleNavigate}
+                initialStep={2}
+              />
+            } 
+          />
+
+          {/* 7. Góc Khoa Học & Blog */}
+          <Route 
+            path="/khoa-hoc" 
+            element={
+              <SciencePage 
+                onNavigate={handleNavigate}
+                onSelectArticle={(art) => {
+                  setSelectedArticle(art);
+                  navigate(`/khoa-hoc/${art.slug || art.id}`);
+                }}
+              />
+            } 
+          />
+          <Route path="/goc-khoa-hoc" element={<Navigate to="/khoa-hoc" replace />} />
+
+          {/* 8. Chi Tiết Bài Báo Khoa Học */}
+          <Route 
+            path="/khoa-hoc/:slug" 
+            element={
+              <ArticleDetailPage 
+                article={selectedArticle}
+                onNavigate={handleNavigate}
+                onAddToCart={addItem}
+              />
+            } 
+          />
+
+          {/* 9. Trang Liên Hệ & Showroom Quy Nhơn */}
+          <Route 
+            path="/lien-he" 
+            element={<ContactPage />} 
+          />
+
+          {/* 10. Trang Câu Hỏi Thường Gặp (FAQ) */}
+          <Route 
+            path="/faq" 
+            element={<FaqPage />} 
+          />
+
+          {/* 11. Fallback Route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </MainLayout>
+    </>
   );
 }
