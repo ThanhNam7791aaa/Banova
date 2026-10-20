@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { api, mapQuizResult } from '../services';
 
 export default function QuizPage({ 
   onNavigate = () => {},
@@ -7,8 +8,10 @@ export default function QuizPage({
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
   const [showResult, setShowResult] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverQuizResult, setServerQuizResult] = useState(null);
 
-  // Lưu trữ câu trả lời của người dùng
+  // Lưu trữ câu trả lời của người dùng theo đúng shape BE quy ước
   const [answers, setAnswers] = useState({
     goal: 'gut-health',
     morning_routine: 'speed',
@@ -27,12 +30,25 @@ export default function QuizPage({
     setAnswers((prev) => ({ ...prev, [field]: value }));
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < totalSteps) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      setShowResult(true);
-      window.scrollTo({ top: 400, behavior: 'smooth' });
+      // Gọi API nộp câu trả lời quiz lên server BE
+      try {
+        setIsSubmitting(true);
+        const res = await api.quiz.submit(answers);
+        if (res && res.data) {
+          const mapped = mapQuizResult(res.data);
+          setServerQuizResult(mapped);
+        }
+      } catch (err) {
+        console.warn('[QuizPage] Nối API quiz submit lỗi, dùng fallback client:', err);
+      } finally {
+        setIsSubmitting(false);
+        setShowResult(true);
+        window.scrollTo({ top: 400, behavior: 'smooth' });
+      }
     }
   };
 
@@ -50,6 +66,7 @@ export default function QuizPage({
   const restartQuiz = () => {
     setCurrentStep(1);
     setShowResult(false);
+    setServerQuizResult(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -98,7 +115,8 @@ export default function QuizPage({
     };
   };
 
-  const recommendedProduct = getRecommendedProduct();
+  const recommendedProduct = serverQuizResult?.product || getRecommendedProduct();
+  const quizFeedbackMessage = serverQuizResult?.message || recommendedProduct.whyFitText;
 
   return (
     <div className="flex flex-col w-full">
@@ -898,7 +916,7 @@ export default function QuizPage({
           <div className="mt-space-lg p-space-md rounded-2xl bg-surface-container-low/50 text-on-surface-variant flex items-center gap-space-sm shadow-xs border border-surface-container">
             <span className="material-symbols-outlined text-outline text-[22px] shrink-0">info</span>
             <p className="font-body-sm text-body-sm leading-relaxed">
-              <strong className="text-primary font-semibold">Khuyến cáo y sinh:</strong> Kết quả trắc nghiệm và gợi ý khẩu phần được phát triển dựa trên nguyên lý vi sinh học đường ruột thực nghiệm của tinh bột kháng RS2. Đây không phải chẩn đoán bệnh học hay chỉ định thay thế phác đồ điều trị của bác sĩ chuyên khoa.
+              <strong className="text-primary font-semibold">Khuyến cáo y sinh:</strong> Kết quả trắc nghiệm và gợi ý khẩu phần được phát triển dựa trên nguyên lý vi sinh học đường ruột thực nghiệm của tinh bột kháng RS2. Sản phẩm không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh.
             </p>
           </div>
         </div>

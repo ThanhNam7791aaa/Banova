@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
+import { api } from '../services';
 
 export default function CheckoutPage({
   cartItems = [],
@@ -15,6 +16,8 @@ export default function CheckoutPage({
   const [couponApplied, setCouponApplied] = useState(true);
   const [couponError, setCouponError] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('demo'); // 'demo' | 'cod' | 'qr'
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState(null);
 
   // Form thông tin khách hàng
   const [formData, setFormData] = useState({
@@ -30,12 +33,12 @@ export default function CheckoutPage({
   const [orderSuccessData, setOrderSuccessData] = useState(null);
 
   const formatVND = (amount) => {
-    return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+    return new Intl.NumberFormat('vi-VN').format(amount || 0) + ' ₫';
   };
 
   // Tính toán chi phí
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const totalQty = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const subtotal = cartItems.reduce((acc, item) => acc + ((Number(item.price) || 0) * (Number(item.quantity) || 1)), 0);
+  const totalQty = cartItems.reduce((acc, item) => acc + (Number(item.quantity) || 1), 0);
   const shippingFee = 0; // Luôn miễn phí cước bảo ôn
   const discountAmount = couponApplied ? 0 : 0; // Miễn phí cước 30.000đ được áp dụng
   const finalTotal = subtotal - discountAmount;
@@ -65,7 +68,7 @@ export default function CheckoutPage({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleSubmitOrder = (e) => {
+  const handleSubmitOrder = async (e) => {
     if (e) e.preventDefault();
 
     if (!formData.name.trim() || !formData.phone.trim() || !formData.address.trim()) {
@@ -73,22 +76,61 @@ export default function CheckoutPage({
       return;
     }
 
-    const randomSuffix = Math.floor(100 + Math.random() * 900);
-    const orderId = `BNV-${new Date().getFullYear()}1019-${randomSuffix}`;
+    if (cartItems.length === 0) {
+      alert('Giỏ hàng đang trống. Vui lòng thêm sản phẩm trước khi đặt hàng.');
+      return;
+    }
 
-    setOrderSuccessData({
-      orderId,
-      createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-      paymentMethod,
-      customer: { ...formData },
-      items: [...cartItems],
-      subtotal,
-      finalTotal,
-      couponApplied
-    });
+    try {
+      setIsSubmitting(true);
+      setOrderError(null);
 
-    setCurrentStep(3);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Quy tắc BE Handover 5.3: paymentMethod chỉ có 'COD' hoặc 'DEMO' (VietQR map sang DEMO)
+      const bePaymentMethod = paymentMethod === 'cod' ? 'COD' : 'DEMO';
+
+      const payload = {
+        customerName: formData.name.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email ? formData.email.trim() : null,
+        address: `${formData.address.trim()}${formData.district ? ', ' + formData.district : ''}${formData.city ? ', ' + formData.city : ''}`,
+        note: formData.notes ? formData.notes.trim() : null,
+        paymentMethod: bePaymentMethod,
+        // Chỉ gửi productId và quantity, KHÔNG gửi giá (NFR-09)
+        items: cartItems.map((item) => ({
+          productId: item.id,
+          quantity: Number(item.quantity) || 1
+        }))
+      };
+
+      const response = await api.orders.create(payload);
+      const serverOrder = response.data || {};
+
+      setOrderSuccessData({
+        orderId: serverOrder.orderCode || `BNV-${new Date().getFullYear()}1019-999`,
+        createdAt: serverOrder.createdAt 
+          ? new Date(serverOrder.createdAt).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+          : new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        paymentMethod: bePaymentMethod,
+        customer: { ...formData },
+        items: [...cartItems],
+        subtotal: serverOrder.totalAmount || subtotal,
+        finalTotal: serverOrder.totalAmount || finalTotal,
+        couponApplied,
+        status: serverOrder.status || 'PENDING'
+      });
+
+      // Dọn sạch giỏ hàng sau khi đặt thành công
+      onClearCart();
+      setCurrentStep(3);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      console.error('[CheckoutPage] Lỗi đặt hàng API:', err);
+      const errMsg = err.message || 'Không thể gửi đơn hàng đến máy chủ. Vui lòng thử lại sau.';
+      setOrderError(errMsg);
+      alert('Lỗi đặt hàng: ' + errMsg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

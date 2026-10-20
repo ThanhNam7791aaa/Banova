@@ -1,43 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { api, mapProduct } from '../services';
 
 export default function ProductDetailPage({ 
-  product, 
+  product: initialProduct, 
   onNavigate = () => {},
   onAddToCart = () => {}
 }) {
-  // Sản phẩm mặc định nếu vào thẳng trang chi tiết
-  const currentProduct = product || {
-    id: 'prod-01',
-    name: 'Bột Tinh Bột Kháng Banova 500g',
-    category: 'bot',
-    categoryLabel: 'Bột tinh bột kháng',
+  const { slug } = useParams();
+  const [productData, setProductData] = useState(initialProduct ? mapProduct(initialProduct) : null);
+  const [loading, setLoading] = useState(!initialProduct && !!slug);
+  const [error, setError] = useState(null);
+
+  // States
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (slug) {
+      async function fetchDetail() {
+        try {
+          setLoading(true);
+          setError(null);
+          const res = await api.products.detail(slug);
+          if (isMounted && res.data) {
+            setProductData(mapProduct(res.data));
+          }
+        } catch (err) {
+          if (isMounted) {
+            console.error('[ProductDetailPage] Lỗi:', err);
+            setError(err);
+          }
+        } finally {
+          if (isMounted) setLoading(false);
+        }
+      }
+      fetchDetail();
+    }
+    return () => { isMounted = false; };
+  }, [slug]);
+
+  // Fallback nếu không có prop và API chưa trả về
+  const currentProduct = productData || {
+    id: 'placeholder',
+    name: 'Bột Tinh Bột Kháng Banova',
     price: 159000,
     formattedPrice: '159.000 ₫',
-    originalPrice: '189.000 ₫',
-    discountAmount: '30.000 ₫',
-    rating: '4.9',
-    reviewsCount: 48,
-    deliveredCount: '2,450+',
-    packageSpecs: 'Hũ 500g (33 bữa)',
+    packageSpecs: 'Quy cách chuẩn',
     servingSize: '15g / ngày',
     origin: 'Gia Lai OCOP 4*',
-    rsPercentage: '58.4% Tự Nhiên',
-    description: 'Giải pháp nuôi dưỡng hệ vi sinh đường ruột & hỗ trợ ổn định đường huyết tự nhiên từ chuối xanh cao nguyên Gia Lai sấy lạnh bảo toàn hoạt tính sinh học RS2.'
+    rsPercentage: 'Chuẩn RS2 Tự Nhiên',
+    description: 'Giải pháp nuôi dưỡng hệ vi sinh đường ruột & hỗ trợ ổn định đường huyết tự nhiên từ chuối xanh cao nguyên Gia Lai.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBsLeH_7AMePXKa6uSLLev1jV9T_4loFtxndS9sHFFEDuzsWanDShb-RtfeYBBL0zNt91LmuBghISC7aO3cGDLyBWYhOx3T6cRUIcfW_8fpWsSdjqTxgKnjzRFNYiPP2mBjeqhm6r2HcYCFaqB6uFKI91eTBYOSW5KAHvC9P0qheigZW7iKLeO7IVUBZkD7h4rNXXE97F9cydjSn45kh-cXkUShYz4SMHSL33o-1K6-Rv7qs3MgDBQR'
   };
 
   // Gallery hình ảnh
   const galleryImages = [
     {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAuRkeO2Ho9wX6lnlN3vj-0_UDE_XwgdH-ikBHOTMU85zIcwJkLVP3Z-txEDWHa0Q9w9uPRIGfDKPT27cF937f-Q4XGbvg3OGLyLARRmZr3it4s6-Fx7RDsWaROFNSa2rJzJH_kayZMwAehpeZn0_pj-v-JchvFYYl-Z_M3vtRxymFYgxQUbWAzrVen5e8QjLOP2YhUCiJbT4oNEvlpeGg5XDgBb1HEyg-jffB3T7KA4U5pISbBXwOU',
-      label: 'Hũ 500g'
-    },
-    {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCZyyHv7i0P4Be6-bj_Xd-9dSY16GoMVWBM6W5ZAoMxHvIK1rCU1kT_WLS6cmTpvqvrSbGNPxnWd8lqaydeijB0NSapWJ9JJYR5WddpFoSruRrJs2BK2DQrOCqZDObwGFR8u7uz2s4wDLCewmCuiBsACj5qxG-aB9SnYM5-YIOzvJ0t5HSFEv2k4c20Ijq-xS77c3ysUFKivMOWbsalhyd5uAT7qlNDlZgS4T2ug8kFXfTBgDLI7xe2',
-      label: 'Bột mịn RS2'
-    },
-    {
-      src: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC6fjzxGjnVkT8F55HdpQTFJOp2FVi2eGiRULZVRDlpPq01y12Vpqu8VBoa8GKXVvENTWWCgKNALDOKFcwyKfeUnAtU1VSR0-t7dguTTWFC1rSFp5Ksgs0z5q_0p5r97qZgbG9OW8KzY0IdN-_Ta4uazHytLuz09AkIJS4sk_JWFhushXaVwP3IFZsTV5hcK4l73km91yAnY2hhYrzcS4jU7oV00_XmWjI1yBZ1q-hwupw5J-tKrOzB',
-      label: 'Món gợi ý'
+      src: currentProduct.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAuRkeO2Ho9wX6lnlN3vj-0_UDE_XwgdH-ikBHOTMU85zIcwJkLVP3Z-txEDWHa0Q9w9uPRIGfDKPT27cF937f-Q4XGbvg3OGLyLARRmZr3it4s6-Fx7RDsWaROFNSa2rJzJH_kayZMwAehpeZn0_pj-v-JchvFYYl-Z_M3vtRxymFYgxQUbWAzrVen5e8QjLOP2YhUCiJbT4oNEvlpeGg5XDgBb1HEyg-jffB3T7KA4U5pISbBXwOU',
+      label: currentProduct.unitInfo || 'Hình ảnh sản phẩm'
     }
   ];
 
@@ -52,33 +75,8 @@ export default function ProductDetailPage({
       formattedPrice: '39.000 ₫',
       subInfo: 'Gói 120g • Giàu chất xơ chuối xanh, hỗ trợ no lâu và không lo tích mỡ thừa.',
       image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCMA7pke-2VlhpG1qiTtwt0th4YCiMdLRBah0ficRlaLdMt7RaD-XjGwbsIG5FEgylEyqmvG6ugCFe_GADNs0ToBEvyTKe0FJK8XUbTDH_yeBN1KMq-VJ-MXoAtYUEvmGinJlW2_6q424oYBX98iAP7_koKU635tk0PgwesPPZIHkRVF75dw2PuhBz5PySZbwfufw_BEwOnbvzc-oKpkIcqPqHd86W7RtXKdVYWjRE6vrPQdoAbJu_Z'
-    },
-    {
-      id: 'cross-02',
-      name: 'Bột Banova 10 gói 15g Tiện Lợi',
-      badge: 'Tiện lợi văn phòng',
-      rating: '4.9 (86)',
-      price: 69000,
-      formattedPrice: '69.000 ₫',
-      subInfo: 'Hộp 150g • Chia sẵn định lượng chuẩn 15g mang đi công tác, du lịch gọn nhẹ.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDpMX9imrxWGyDFz_ruZHVJ5Ul12nZFhr8yNhh_OE-IZ5F6IiWthVnHw40HGSyCJETrH4WY0djbsrCOgRr0TPyv_nsyRegPhM479d2_Seom-D1Mi_CyfYnhj9EwgiXDuKedG2EN2BU3XhxBzl2sZL5yIb3wZLs1Ts1I79WvbYWbqey-OgclFHbSrIiHIrSsbHrWss0l6aBwluis8NRiSPWIgspN4S3WZ5tl8oy0-68GfyygeZjrjwyq'
-    },
-    {
-      id: 'cross-03',
-      name: 'Hộp quà Sức Khỏe Quy Nhơn Cao Cấp',
-      badge: 'Quà tặng sức khỏe',
-      rating: '5.0 (34)',
-      price: 219000,
-      formattedPrice: '219.000 ₫',
-      subInfo: 'Combo Hũ 250g + Bánh quy cám + Bình lắc y sinh nắp kín cao cấp.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuChFDgcQJFjgdPgc7aMBfVOTy1C-33eU383upvJX_m4Kujz2hSOMYlW9yeuEL9q9fQFtdM7QcR6GiUCuQEM2EwIUCCEb4YlPggvX-DsSKE55ajDqZKn41vZ-NXeNKBloifBRuou_dGdzP-h5JLz1vFxr4gTJrJDNbn_qrLL8kWarQ_DTX3X9VhtSP_9IQap3r5d1VyNpWEFMv3ckcPvC5C0DxBK1kcCul6zg01BbL9U7RdGnghCHJK2'
     }
   ];
-
-  // States
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState(0);
 
   const incrementQuantity = () => setQuantity((q) => q + 1);
   const decrementQuantity = () => {
@@ -86,11 +84,42 @@ export default function ProductDetailPage({
   };
 
   const handleAdd = () => {
+    if (currentProduct.id === 'placeholder') return;
     onAddToCart({
       ...currentProduct,
       quantity
     });
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-gutter py-16 animate-pulse space-y-6">
+        <div className="h-6 bg-surface-container-low rounded w-1/4" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-5 h-96 bg-surface-container-low rounded-2xl" />
+          <div className="lg:col-span-7 space-y-4">
+            <div className="h-8 bg-surface-container-low rounded w-3/4" />
+            <div className="h-4 bg-surface-container-low rounded w-1/2" />
+            <div className="h-16 bg-surface-container-low rounded" />
+            <div className="h-12 bg-surface-container-low rounded w-1/3" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && error.code === 'NOT_FOUND') {
+    return (
+      <div className="max-w-3xl mx-auto px-gutter py-24 text-center space-y-4">
+        <span className="material-symbols-outlined text-outline text-[54px]">sentiment_dissatisfied</span>
+        <h2 className="font-headline-lg text-primary font-bold">Không tìm thấy sản phẩm</h2>
+        <p className="font-body-md text-on-surface-variant">Sản phẩm với đường dẫn này không tồn tại hoặc đã ngừng kinh doanh.</p>
+        <Link to="/san-pham" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-on-primary font-label-md font-bold">
+          Quay lại danh sách sản phẩm
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col w-full">

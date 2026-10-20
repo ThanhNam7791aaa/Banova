@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
+import { api } from '../services';
 
-export const ARTICLES_DATA = [
+export const ARTICLES_DATA_FALLBACK = [
   {
     id: 'art-01',
+    slug: 'co-che-rs2-khoa-hoc-microbiome',
     category: 'science',
     categoryLabel: 'Khoa học',
     tags: ['TieuDuong', 'ResistantStarch'],
@@ -14,78 +16,6 @@ export const ARTICLES_DATA = [
     author: 'Banova Clinical Nutrition Team',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjzQ4TVd9h7TdU-hj6ee0cnMwdHxq2Jjtik5begTaIO_DC8MwmI8yS6XMsVRukZQviRNSmuk3NforpsiNxH96NBb8byJacx2PsQxn02tgFXRzPrdOqwzAqfjJMCfG44CRPzLnBQOuc2vQ8Jt1IKAGliDJkJZkyeNiopiCbm4R_HF6E4tnObXUqBlRCAxk-Q-844h8ODJNrQ2aZzEV4mUfHRo2yqytf6NZWp0WpXSWUB-ORjmXui25Z',
     featured: true
-  },
-  {
-    id: 'art-02',
-    category: 'science',
-    categoryLabel: 'Khoa học',
-    tags: ['IBS', 'ResistantStarch'],
-    title: 'Cơ chế SCFA Butyrate: Lá chắn vàng bảo vệ hàng rào niêm mạc đại tràng',
-    excerpt: 'Cách các chủng vi khuẩn kỵ khí Faecalibacterium prausnitzii lên men tinh bột kháng tạo nguồn năng lượng chính cho tế bào biểu mô ruột kết.',
-    date: '14/10/2026',
-    readTime: '4 phút đọc',
-    author: 'TS. Dược học Lê Minh Tuấn',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGeTEsnpxVQF1Uk0Dhb1Q-9-hAJ7eUSYy_5kxkh7T_rmvFUdsN17wpnM58L1wXIGX0hlPnvb0FnZ6mZzsQnEvBuGzpkgLE8W21EiQstVUXey_7KztWONXz1c4izSqtwqdP5EJr32oTfpE3_bLW1UL7BkzTxGX7qCqbQxK35JAkrvbN8EFtyImlSzNDHb09gT_mJGJPfEueOqru0sJks5Ry20DQ7f8xOtoGmaWC3yVI1OzpGTZIer0e'
-  },
-  {
-    id: 'art-03',
-    category: 'blog',
-    categoryLabel: 'Công thức',
-    tags: ['CongThucSmoothie', 'ResistantStarch'],
-    title: 'Sinh tố chuối xanh yến mạch phục hồi năng lượng buổi sáng không gây tăng đường huyết',
-    excerpt: 'Công thức bữa sáng 3 phút kết hợp 15g bột Banova RS2 giúp no lâu đến trưa, kiểm soát thèm ngọt hiệu quả.',
-    date: '11/10/2026',
-    readTime: '3 phút đọc',
-    author: 'Chuyên gia Ẩm thực Dinh dưỡng',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC9VhbaCs7sW8Gq06-Li3R5knT29vurdeHZXqLBKVNU4h4IBozCq7Uuv2Ox-YcK96-E-NUhW_33_HjTKm6yeTZ4rIPEavmoCrKbuSm9cf5127ETGIfgVRYdSMaV49yhd9MNE6pQn37SPwFJMHC_yKYs0d2Xt0T2Zj7mCUXbcJmlDme_z6Mevc4aQgF_VcukXwxrW6LVCfq33mymsqNUFUMkTrz8ajFoLSFNAIxj1c0ikUUwUEZPeuFW'
-  },
-  {
-    id: 'art-04',
-    category: 'science',
-    categoryLabel: 'Khoa học',
-    tags: ['ResistantStarch'],
-    title: 'So sánh 4 loại tinh bột kháng (RS1 - RS4) và ưu thế vượt trội của RS2 tự nhiên Gia Lai',
-    excerpt: 'Tại sao phương pháp sấy lạnh tầng sôi giữ được cấu trúc hạt tinh bột kháng nguyên vẹn tốt hơn các dạng tinh bột biến tính hóa học.',
-    date: '08/10/2026',
-    readTime: '6 phút đọc',
-    author: 'Viện Dinh Dưỡng Ứng Dụng',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC2tMc0vSFKxKtgG64XwHNyIzT92SBBTPLhy9ycyjwEW573RpEmVAEQoItJYBBcrzXMVIeOjdXec3TxhIq9hXvVGmXUUDKEJtDDqhafl8y5L0e5fch84_g86Wmxtf2JWRfwNvHEFiryUxVvc-E0OGVulpWdW7BXs7S8oqwPA6yF4FBIZl6fOcvcygumMHskS2ek3aS2fOofcLqOl0duJJlVTtONeKBk1GOyfXZzUhL2gKVrQ-2kK4BA'
-  },
-  {
-    id: 'art-05',
-    category: 'blog',
-    categoryLabel: 'Công thức',
-    tags: ['ResistantStarch'],
-    title: 'Bánh quy hạt Chia & Tinh bột kháng: Bữa phụ hoàn hảo cho người theo chế độ Eat Clean & Keto',
-    excerpt: 'Hướng dẫn nướng bánh ở nhiệt độ dưới ngưỡng phá vỡ cấu trúc tinh thể RS2, giòn xốp thơm lừng.',
-    date: '05/10/2026',
-    readTime: '5 phút đọc',
-    author: 'Banova Kitchen Lab',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDGbEhcqBFLZ74_NAZCBDB1G_iaU_l-tXuTDTzptZgUZ6h5aqIQhnLqEVd2dlt3k4l7XWRb5s1izC6taziBnjA-qp1M2yhJp2_pmY9wp4WLemQ6iEgEEMVIX4Jp9XmbCrbbFvx81pFFvCKvEZUl77RsUGHjnvW0BCaRK5D4nX9TrtGEDrOldX-Pb6FkJbXDRFoiclt2phy6iqSRAq4-V7JkvkKu48qoLN5XLiQYvuY8vurwfELdfc3X'
-  },
-  {
-    id: 'art-06',
-    category: 'science',
-    categoryLabel: 'Khoa học',
-    tags: ['IBS'],
-    title: 'Mối liên hệ giữa trục Não - Ruột (Gut-Brain Axis) và chất lượng giấc ngủ',
-    excerpt: 'Hơn 90% Serotonin của cơ thể được tổng hợp tại đường ruột. Nuôi dưỡng vi sinh vật đường ruột giúp giảm căng thẳng và ngủ sâu.',
-    date: '01/10/2026',
-    readTime: '7 phút đọc',
-    author: 'TS. Nguyễn Thùy Trang',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA1geI4xvnuqoEUpFmQaGQUXSr7bx8KsmI-e2JsR8lpEV_4KXdTwwQKLjEcZMcxPTeObmNHXNIDPIwEzNK7yDu5ViYC1oNO6ewZ1_QPsmHwQ66hMCwqKNpmmppw0R_54jEAlcfIJFd7XepWA-2YSU_LqevyuemdsbcRXfZFJk6OJHKLj1V6GnqgfxCYFWe5hbZay-q8J6u6a73I3DNxGEwNh1vyaUogVn9v2vQjuh1HanT7_pAriFw_'
-  },
-  {
-    id: 'art-07',
-    category: 'blog',
-    categoryLabel: 'Công thức',
-    tags: ['IBS', 'ResistantStarch'],
-    title: 'Súp rau củ thanh đạm rắc bột Banova hỗ trợ người đại tràng nhạy cảm',
-    excerpt: 'Mẹo bổ sung bột RS2 vào thức ăn ấm dưới 50 độ C không làm biến tính tinh bột, êm bụng nhẹ nhàng cho bữa tối.',
-    date: '28/09/2026',
-    readTime: '4 phút đọc',
-    author: 'Banova Kitchen Lab',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCNRvuI20xgA_72DNLDG-2smFgaIu6sHRF3XyZ0lI8kmYjIaRGUZd_B7NKkw6y0Jh4-ayDuJf4RqjLO3bPh5k-F4tl2v1Fcxqkm9xcyiHJjr-mq4uM3UfeNyNE4rXR8Dj_wBkAPNdmvgxaCLH1fmPBqhrjc3I24wRGEjHhv9FteQp-3CLbetdg4AgsyIPUc4XKBDQhcg6gmA1ZthE3HFNFRQa7VNNKusLtTaua-wMlkRFNA5O23kV4F'
   }
 ];
 
@@ -95,24 +25,43 @@ export default function SciencePage({
 }) {
   const [currentFilter, setCurrentFilter] = useState('all'); // 'all' | 'science' | 'blog'
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Newsletter states
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
   const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+  const [newsletterError, setNewsletterError] = useState(null);
 
-  // Lọc bài viết
-  const filteredArticles = ARTICLES_DATA.filter((art) => {
-    const matchesCategory = currentFilter === 'all' || art.category === currentFilter;
-    const q = searchQuery.trim().toLowerCase();
-    const matchesSearch =
-      !q ||
-      art.title.toLowerCase().includes(q) ||
-      art.excerpt.toLowerCase().includes(q) ||
-      art.tags.some((t) => t.toLowerCase().includes(q));
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchArticles() {
+      try {
+        setLoading(true);
+        const params = {};
+        if (currentFilter === 'science') params.type = 'SCIENCE';
+        if (currentFilter === 'blog') params.type = 'BLOG';
+        if (searchQuery.trim()) params.q = searchQuery.trim();
 
-    return matchesCategory && matchesSearch;
-  });
+        const res = await api.articles.list(params);
+        if (isMounted && res.data) {
+          setArticles(res.data);
+        }
+      } catch (err) {
+        console.warn('[SciencePage] API fetch articles fallback:', err);
+        if (isMounted) setArticles(ARTICLES_DATA_FALLBACK);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    fetchArticles();
+    return () => { isMounted = false; };
+  }, [currentFilter, searchQuery]);
 
-  const featuredArticle = ARTICLES_DATA.find((a) => a.featured) || ARTICLES_DATA[0];
-  const gridArticles = filteredArticles.filter((a) => a.id !== 'art-01');
+  const displayArticles = articles.length > 0 ? articles : ARTICLES_DATA_FALLBACK;
+  const featuredArticle = displayArticles.find((a) => a.featured) || displayArticles[0];
+  const gridArticles = displayArticles.filter((a) => a.id !== featuredArticle?.id);
 
   const handleTagClick = (tag) => {
     setSearchQuery(tag);
@@ -123,9 +72,23 @@ export default function SciencePage({
     setSearchQuery('');
   };
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    setNewsletterSubmitted(true);
+    if (!newsletterEmail.trim()) return;
+    try {
+      setNewsletterLoading(true);
+      setNewsletterError(null);
+      await api.newsletter.subscribe(newsletterEmail.trim());
+      setNewsletterSubmitted(true);
+    } catch (err) {
+      if (err.code === 'CONFLICT' || err.status === 409) {
+        setNewsletterError('Email này đã được đăng ký nhận bản tin trước đó.');
+      } else {
+        setNewsletterError(err.message || 'Không thể đăng ký lúc này. Vui lòng thử lại.');
+      }
+    } finally {
+      setNewsletterLoading(false);
+    }
   };
 
   return (
@@ -552,10 +515,15 @@ export default function SciencePage({
                       id="newsletterEmail"
                       type="email"
                       required
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
                       placeholder="bacsi@benhvien.vn hoặc email của bạn..."
                       className="w-full h-12 px-space-md bg-surface-container-low text-on-surface placeholder:text-outline rounded-xl font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:bg-surface-container-lowest transition-all border border-surface-container"
                     />
                   </div>
+                  {newsletterError && (
+                    <p className="font-body-sm text-error text-[12px] font-semibold">{newsletterError}</p>
+                  )}
                   <div className="space-y-1">
                     <label className="block font-label-sm text-label-sm text-on-surface-variant" htmlFor="readerRole">
                       Bạn quan tâm với tư cách:
@@ -572,10 +540,11 @@ export default function SciencePage({
                   </div>
                   <button 
                     type="submit"
-                    className="w-full h-12 rounded-xl bg-secondary text-on-secondary font-label-lg text-label-lg font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                    disabled={newsletterLoading}
+                    className="w-full h-12 rounded-xl bg-secondary text-on-secondary font-label-lg text-label-lg font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer disabled:opacity-50"
                   >
                     <span className="material-symbols-outlined text-[20px]">send</span>
-                    <span>Đăng ký nhận báo cáo định kỳ</span>
+                    <span>{newsletterLoading ? 'Đang gửi...' : 'Đăng ký nhận báo cáo định kỳ'}</span>
                   </button>
                   <p className="font-body-sm text-body-sm text-outline text-center text-[11px] leading-tight pt-1">
                     Bằng cách đăng ký, bạn đồng ý với tiêu chuẩn bảo mật dữ liệu nghiên cứu y khoa của Banova.
@@ -598,7 +567,7 @@ export default function SciencePage({
               Khuyến Cáo Chuẩn Y Khoa &amp; Tính Minh Bạch Nghiên Cứu
             </div>
             <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-              Tất cả các bài viết, chuyên khảo và công thức trên "Góc Khoa Học Banova" được đối chiếu từ tài liệu PubMed, ScienceDirect và các nghiên cứu lâm sàng về Kháng Tinh Bột RS2 (Resistant Starch). Nội dung mang tính chất phổ biến kiến thức vi sinh đường ruột và dinh dưỡng chuyển hóa, không mang tính chẩn đoán, kê đơn hay thay thế phác đồ điều trị của bác sĩ chuyên khoa.
+              Tất cả các bài viết, chuyên khảo và công thức trên "Góc Khoa Học Banova" được đối chiếu từ tài liệu PubMed, ScienceDirect và các nghiên cứu lâm sàng về Kháng Tinh Bột RS2 (Resistant Starch). Nội dung mang tính chất phổ biến kiến thức vi sinh đường ruột và dinh dưỡng chuyển hóa, sản phẩm không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh.
             </p>
           </div>
         </div>

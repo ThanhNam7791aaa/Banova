@@ -1,190 +1,102 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/product/ProductCard';
+import { api, mapProduct } from '../services';
 
 export default function CatalogPage({ 
   onNavigate = () => {},
   onAddToCart = () => {},
   onSelectProduct = () => {}
 }) {
-  // Mock dữ liệu 6 SKU chuẩn tài liệu
-  const initialProducts = [
-    {
-      id: 'prod-01',
-      slug: 'bot-tinh-bot-khang-banova-500g',
-      name: 'Bột tinh bột kháng Banova 500g',
-      category: 'bot',
-      categoryLabel: 'Bột tinh bột kháng',
-      badge: 'Bán chạy nhất',
-      discount: '-11%',
-      rsBadge: '11.6g RS2 / 2 khẩu phần',
-      rsValue: 11.6,
-      subInfo: 'Hũ thủy tinh 500g • 33 khẩu phần • GI < 45',
-      description: 'Hũ thủy tinh cao cấp 500g bảo quản tối ưu cấu trúc RS2 sấy lạnh, thích hợp cho cả gia đình dùng đều đặn 1 tháng.',
-      price: 159000,
-      formattedPrice: '159.000 ₫',
-      originalPrice: '179.000 ₫',
-      rating: '4.9',
-      reviewsCount: 128,
-      benefits: ['gi-low', 'scfa', 'no-sugar', 'ocop'],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqu4Gc51Yg9Kk6fQaxsMiMJ6qEXPjR5Dpq8kg6laED18kWOhDhT1Eu2xu6WZRg_Y30SKpW8QNVCxaTKbA03MddttUc6grNcuP3y7DkYXERmMIxjLNOyEbUvvDxGP1M5sDBPlYwUFMtt5LQolzVD5MevRhWlmfj9RTMSmCskm4tKqQoZrH0uPqvgHiOIgJHs7Z8bu_mQdZYXkbBRp-M1DMSp2xaZuiapMFKAhZnXvns9OKlO05lnQ9l'
-    },
-    {
-      id: 'prod-02',
-      slug: 'bot-tinh-bot-khang-banova-250g',
-      name: 'Bột tinh bột kháng Banova 250g',
-      category: 'bot',
-      categoryLabel: 'Bột tinh bột kháng',
-      badge: 'Thuần tự nhiên',
-      rsBadge: '5.8g RS2 / khẩu phần',
-      rsValue: 5.8,
-      subInfo: 'Hũ 250g • 16 khẩu phần • Prebiotic tự nhiên',
-      description: 'Hũ 250g nhỏ gọn, dùng thử trải nghiệm 2 tuần cải thiện rõ rệt hệ tiêu hóa và nhu động ruột.',
-      price: 89000,
-      formattedPrice: '89.000 ₫',
-      rating: '5.0',
-      reviewsCount: 94,
-      benefits: ['gi-low', 'scfa', 'no-sugar', 'ocop'],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCim1TmSYwJPmmYbSMxrhs9lrY9qFGakG0DkE9_RLBJEOrgVTapeHZsWnAOCbZycMnX28b9GhksBx4ibBok_m2JhDUjwdsaJfItui3g4okNrYlXFQAZ1G0YUuPA1xhLU1bGG3I1RXH356SSnjEi5pp90G8Qi5X96-nFOnE_LyI0ZqYw6IyZE2NcZP1iYceYhALkpmMhznG3Iw-3bjXiSj5TQsI3Grq_TYvYeUS7xeZ11nxxjm0y5fJz'
-    },
-    {
-      id: 'prod-03',
-      slug: 'bot-banova-10-goi-15g-tien-loi',
-      name: 'Bột Banova 10 gói 15g tiện lợi',
-      category: 'bot',
-      categoryLabel: 'Bột tinh bột kháng',
-      badge: 'Văn phòng & Du lịch',
-      rsBadge: '5.8g RS2 / gói',
-      rsValue: 5.8,
-      subInfo: 'Hộp 10 gói x 15g • Pha nhanh với nước ấm/sinh tố',
-      description: 'Định lượng chuẩn xác 15g/gói, bao bì tráng nhôm tiện lợi mang theo khi đi làm hoặc công tác xa.',
-      price: 69000,
-      formattedPrice: '69.000 ₫',
-      rating: '4.8',
-      reviewsCount: 76,
-      benefits: ['gi-low', 'scfa', 'no-sugar'],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCaigzIEeqxw6pfPNapHWxjdYqNPmdfBvhCjtErP2h-0ZRtfHe0cyEx1SgwTu_7qGWwVYj3-zavRO_XSKcnzGA3ZUiF-efoGpjrNhxHRaNXTWxVIs4-xtxaOAWVo3rh5wOH52FFh9gcP1aF33-__7wpET1RM0mPqzZFEKXQDhNNBFF78PyfbcdXeE9pFpqeyaC5O5wXwX--p2its2XrOy9zqOhPbtvRpbfyCej1aSBJ0k-hmSosM9Ky'
-    },
-    {
-      id: 'prod-04',
-      slug: 'banh-quy-nguyen-cam-prebiotic-chuoi-xanh',
-      name: 'Bánh quy nguyên cám Prebiotic Chuối Xanh',
-      category: 'banh',
-      categoryLabel: 'Bánh dinh dưỡng',
-      badge: 'Ăn vặt lành mạnh',
-      rsBadge: '3.2g RS / gói',
-      rsValue: 3.2,
-      subInfo: 'Gói 120g • Yến mạch & chuối xanh • 0g đường tinh luyện',
-      description: 'Bánh quy nướng nhiệt độ thấp giữ hoạt tính prebiotic, vị giòn bùi tự nhiên từ yến mạch và chuối xanh Gia Lai.',
-      price: 39000,
-      formattedPrice: '39.000 ₫',
-      rating: '4.9',
-      reviewsCount: 52,
-      benefits: ['gi-low', 'no-sugar'],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAZCy2ZlK0WItabDM2N4CEGOK0TkEIQHOIJdCykDBdIJzRxN4QZBIUWJWPqb3-YhbtdG1KduT_AtHiu2_eoYkXcO42jKBhWnTDjuByBk_6wNTZ8C-6Y_JFvEFpZjz33n_G8EO2Llbui6ei7QNudDpmkVDiy-E0OhK3FqedIl7ADWVcZRI-IbUnIAfnj8Ozz7-BmTEydIB60L-8r5cSJ1O10tu_K4J3PWbvyxCXCJ8Q-4zgEFSs5jqEk'
-    },
-    {
-      id: 'prod-05',
-      slug: 'combo-bua-sang-gut-health',
-      name: 'Combo Bữa Sáng Gut-Health (Bột 250g + Bánh quy + Shaker)',
-      category: 'combo',
-      categoryLabel: 'Bữa sáng tiện lợi',
-      badge: 'Tiết kiệm 15%',
-      discount: '-15%',
-      rsBadge: 'Lộ trình 14 ngày',
-      rsValue: 5.8,
-      subInfo: 'Combo khởi động • Tặng kèm cẩm nang sử dụng RS2',
-      description: 'Giải pháp bữa sáng dinh dưỡng nhanh gọn chỉ trong 2 phút: 1 hũ bột 250g, 1 gói bánh prebiotic và 1 bình lắc thể thao cao cấp.',
-      price: 125000,
-      formattedPrice: '125.000 ₫',
-      originalPrice: '148.000 ₫',
-      rating: '5.0',
-      reviewsCount: 38,
-      benefits: ['gi-low', 'scfa', 'ocop'],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjnPRTryhx18_e9BqdcUcQ8KXdTO9CsMARjewr_03cUEZaRMuKWpjZd5WD0XaZcIfnXYrRQqqxmQiMnrt_slOxZiw6Pc9Cg7ZcZUOn2i3YDyMVy3A4lQ_WNu8eJUp7COgFThjZyHWiDp3Uhz-nvWNSG6zP-aJQ7E5HbVAbwReBlBvZ-gZVyybVpfGgm1OC6d0XXG4talRFBLbdxOfwbB9MsSrE2UknK4g1oKl7RQLtVeiD869fGKwn'
-    },
-    {
-      id: 'prod-06',
-      slug: 'hop-qua-quy-nhon-healthy-cao-cap',
-      name: 'Hộp quà Quy Nhơn Healthy Cao Cấp',
-      category: 'qua-tang',
-      categoryLabel: 'Hộp quà tặng',
-      badge: 'Quà tặng ý nghĩa',
-      rsBadge: 'Set quà OCOP',
-      rsValue: 11.6,
-      subInfo: 'Hộp quà biếu sang trọng • 2 hũ bột 250g + Bánh quy + Ly thủy tinh',
-      description: 'Hộp quà sức khỏe tinh tế gửi tặng người thân, đối tác: Đóng gói hộp cứng cao cấp kèm quai xách sang trọng.',
-      price: 219000,
-      formattedPrice: '219.000 ₫',
-      rating: '4.9',
-      reviewsCount: 29,
-      benefits: ['ocop', 'scfa'],
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD9pTeR_U7bU3Iu6xdQT65AcJ_1KIZKyJaTU-aloGWXmpkEaVvuFqWSYxOGME-kdTauBrpI9bPTOqIlsPzFdfTMZlzMH_9T6NRGcEEy2OaIENgRt951A5yHm1_wJnEDv9giOF1fZbgselZlMpms8d6wUZQbFlRmYg41EWR58jmGaB0r7WIjdNI_oYXzL1PLl5TV1x14dJoXVsUt7FVe4lEfUM2pGmLhaf96bMwpfq_cHZFPYTPXD5ss'
-    }
-  ];
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([{ id: 'all', name: 'Tất cả', slug: 'all' }]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // States
+  // Filter & Query States
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedBenefit, setSelectedBenefit] = useState(null);
   const [sortOption, setSortOption] = useState('newest');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list'
+  
+  // Pagination State
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(9);
+  const [meta, setMeta] = useState({ page: 1, pageSize: 9, total: 0, totalPages: 1 });
 
-  const categories = [
-    { id: 'all', label: 'Tất cả', count: 6 },
-    { id: 'bot', label: 'Bột tinh bột kháng', count: 3 },
-    { id: 'banh', label: 'Bánh dinh dưỡng', count: 1 },
-    { id: 'combo', label: 'Bữa sáng tiện lợi', count: 1 },
-    { id: 'qua-tang', label: 'Hộp quà tặng', count: 1 }
-  ];
+  // 1. Fetch categories
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchCategories() {
+      try {
+        const res = await api.categories.list();
+        if (isMounted && res.data) {
+          setCategories([{ id: 'all', name: 'Tất cả', slug: 'all' }, ...res.data]);
+        }
+      } catch (err) {
+        console.warn('[CatalogPage] Không tải được danh mục:', err);
+      }
+    }
+    fetchCategories();
+    return () => { isMounted = false; };
+  }, []);
 
-  const benefitTags = [
-    { id: 'gi-low', label: 'GI Thấp (<45)', icon: 'check_circle' },
-    { id: 'scfa', label: 'Giàu SCFA Butyrate', icon: 'check_circle' },
-    { id: 'no-sugar', label: 'Không đường phụ gia', icon: 'check_circle' },
-    { id: 'ocop', label: 'Chuẩn OCOP 4 Sao', icon: 'grade' }
-  ];
+  // 2. Fetch products with server-side filters & pagination
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchProducts() {
+      try {
+        setLoading(true);
+        setError(null);
 
-  // Lọc và sắp xếp sản phẩm
-  const filteredProducts = useMemo(() => {
-    let list = [...initialProducts];
+        const params = {
+          page,
+          pageSize,
+        };
 
-    // Lọc theo danh mục
-    if (selectedCategory !== 'all') {
-      list = list.filter((p) => p.category === selectedCategory);
+        if (selectedCategory && selectedCategory !== 'all') {
+          params.category = selectedCategory;
+        }
+
+        if (searchQuery.trim()) {
+          params.q = searchQuery.trim();
+        }
+
+        if (sortOption) {
+          params.sort = sortOption;
+        }
+
+        const res = await api.products.list(params);
+        if (isMounted) {
+          const mapped = (res.data || []).map(mapProduct);
+          setProducts(mapped);
+          if (res.meta) {
+            setMeta(res.meta);
+          } else {
+            setMeta({ page: 1, pageSize, total: mapped.length, totalPages: 1 });
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          console.error('[CatalogPage] Lỗi tải sản phẩm:', err);
+          setError(err.message || 'Không thể tải danh sách sản phẩm');
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     }
 
-    // Lọc theo từ khóa tìm kiếm
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      list = list.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.description.toLowerCase().includes(q) ||
-          p.subInfo.toLowerCase().includes(q)
-      );
-    }
+    fetchProducts();
+    return () => { isMounted = false; };
+  }, [page, pageSize, selectedCategory, searchQuery, sortOption]);
 
-    // Lọc theo tag lợi ích
-    if (selectedBenefit) {
-      list = list.filter((p) => p.benefits?.includes(selectedBenefit));
-    }
+  const handleCategoryChange = (catSlug) => {
+    setSelectedCategory(catSlug);
+    setPage(1);
+  };
 
-    // Sắp xếp
-    if (sortOption === 'price-asc') {
-      list.sort((a, b) => a.price - b.price);
-    } else if (sortOption === 'price-desc') {
-      list.sort((a, b) => b.price - a.price);
-    } else if (sortOption === 'rs-high') {
-      list.sort((a, b) => b.rsValue - a.rsValue);
-    } else if (sortOption === 'best-seller') {
-      list.sort((a, b) => (b.reviewsCount || 0) - (a.reviewsCount || 0));
-    }
-
-    return list;
-  }, [selectedCategory, searchQuery, selectedBenefit, sortOption]);
-
-  const toggleBenefit = (benefitId) => {
-    setSelectedBenefit((prev) => (prev === benefitId ? null : benefitId));
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+    setPage(1);
   };
 
   return (
@@ -197,7 +109,7 @@ export default function CatalogPage({
             <button 
               type="button"
               onClick={() => onNavigate('trang-chu')}
-              className="flex items-center gap-1 hover:text-primary transition-colors"
+              className="flex items-center gap-1 hover:text-primary transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-[16px]">home</span>
               <span>Trang chủ</span>
@@ -223,11 +135,11 @@ export default function CatalogPage({
 
             <div className="lg:col-span-4 bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-surface-container">
               <div className="flex items-center justify-between pb-space-xs">
-                <span className="font-label-md text-label-md text-on-surface-variant">Chỉ số kháng tinh bột TB</span>
-                <span className="font-label-lg text-label-lg text-secondary font-bold">58.4% RS2</span>
+                <span className="font-label-md text-label-md text-on-surface-variant">Kháng tinh bột tự nhiên</span>
+                <span className="font-label-lg text-label-lg text-secondary font-bold">Chuẩn RS2 Gia Lai</span>
               </div>
               <div className="w-full h-2 rounded-full bg-surface-container-high overflow-hidden">
-                <div className="h-full bg-secondary rounded-full" style={{ width: '58.4%' }} />
+                <div className="h-full bg-secondary rounded-full" style={{ width: '100%' }} />
               </div>
               <p className="font-body-sm text-body-sm text-outline pt-space-xs">
                 Kháng tinh bột type-2 tự nhiên không bị thủy phân tại dạ dày, lên men chọn lọc tại đại tràng tạo SCFA Butyrate quý giá.
@@ -240,8 +152,8 @@ export default function CatalogPage({
             <div className="flex items-center gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm border border-surface-container">
               <span className="material-symbols-outlined text-secondary text-[24px]">inventory_2</span>
               <div>
-                <div className="font-label-lg text-label-lg text-primary font-bold">6 Sản phẩm</div>
-                <div className="font-body-sm text-body-sm text-on-surface-variant">Có sẵn tại kho</div>
+                <div className="font-label-lg text-label-lg text-primary font-bold">{meta.total || products.length} Sản phẩm</div>
+                <div className="font-body-sm text-body-sm text-on-surface-variant">Dữ liệu từ máy chủ</div>
               </div>
             </div>
             <div className="flex items-center gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm border border-surface-container">
@@ -272,35 +184,29 @@ export default function CatalogPage({
       {/* 2. Filter & Controls Toolbar */}
       <section className="w-full bg-surface pb-space-md">
         <div className="max-w-7xl mx-auto px-gutter space-y-space-md">
-          {/* Category Pills */}
+          {/* Category Pills từ API */}
           <div className="flex items-center gap-space-xs overflow-x-auto pb-1 scrollbar-none">
             {categories.map((cat) => {
-              const isActive = selectedCategory === cat.id;
+              const catKey = cat.slug || cat.id;
+              const isActive = selectedCategory === catKey;
               return (
                 <button
-                  key={cat.id}
+                  key={cat.id || catKey}
                   type="button"
-                  onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-space-md py-space-xs rounded-full font-label-md text-label-md flex items-center gap-1.5 shrink-0 transition-all ${
+                  onClick={() => handleCategoryChange(catKey)}
+                  className={`px-space-md py-space-xs rounded-full font-label-md text-label-md flex items-center gap-1.5 shrink-0 transition-all cursor-pointer ${
                     isActive
                       ? 'bg-primary-container text-on-primary font-semibold shadow-sm'
                       : 'bg-surface-container-low text-on-surface hover:bg-surface-container font-medium'
                   }`}
                 >
-                  <span>{cat.label}</span>
-                  <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                    isActive 
-                      ? 'bg-surface-container-lowest/20 text-on-primary' 
-                      : 'bg-surface-container-high text-on-surface-variant'
-                  }`}>
-                    {cat.count}
-                  </span>
+                  <span>{cat.name}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Search, Benefit Tags & Sort Controls */}
+          {/* Search, Sort Controls */}
           <div className="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-space-md border border-surface-container">
             {/* Search Input */}
             <div className="relative flex-1 min-w-[280px]">
@@ -310,43 +216,25 @@ export default function CatalogPage({
               <input 
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Tìm tên sản phẩm, công dụng (ví dụ: 500g, gói nhỏ, quà tặng)..."
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Tìm kiếm sản phẩm theo tên, mô tả..."
                 className="w-full h-11 pl-10 pr-space-md rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary transition-all"
               />
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setPage(1);
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               )}
-            </div>
-
-            {/* Diet / Scientific Benefit Tags */}
-            <div className="flex items-center gap-space-xs flex-wrap">
-              {benefitTags.map((tag) => {
-                const isSelected = selectedBenefit === tag.id;
-                return (
-                  <button
-                    key={tag.id}
-                    type="button"
-                    onClick={() => toggleBenefit(tag.id)}
-                    className={`px-space-sm py-1 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-1 ${
-                      isSelected
-                        ? 'bg-secondary text-on-secondary font-bold shadow-xs'
-                        : 'bg-surface-container-low hover:bg-secondary-container/40 text-on-surface-variant'
-                    }`}
-                  >
-                    <span className="material-symbols-outlined text-[14px]">
-                      {tag.icon}
-                    </span>
-                    {tag.label}
-                  </button>
-                );
-              })}
             </div>
 
             {/* Sorting & Layout Toggle */}
@@ -355,14 +243,12 @@ export default function CatalogPage({
                 <select
                   aria-label="Sắp xếp sản phẩm"
                   value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value)}
+                  onChange={handleSortChange}
                   className="h-11 pl-space-md pr-8 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md appearance-none focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                 >
                   <option value="newest">Sắp xếp: Mới nhất</option>
-                  <option value="rs-high">Hàm lượng RS cao nhất</option>
                   <option value="price-asc">Giá: Thấp đến cao</option>
                   <option value="price-desc">Giá: Cao đến thấp</option>
-                  <option value="best-seller">Bán chạy nhất</option>
                 </select>
                 <span className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-outline text-[18px]">
                   expand_more
@@ -375,7 +261,7 @@ export default function CatalogPage({
                   type="button"
                   aria-label="Dạng lưới"
                   onClick={() => setViewMode('grid')}
-                  className={`w-9 h-9 rounded-md flex items-center justify-center transition-all ${
+                  className={`w-9 h-9 rounded-md flex items-center justify-center transition-all cursor-pointer ${
                     viewMode === 'grid'
                       ? 'bg-surface-container-lowest text-primary shadow-xs'
                       : 'text-on-surface-variant hover:text-on-surface'
@@ -387,7 +273,7 @@ export default function CatalogPage({
                   type="button"
                   aria-label="Dạng danh sách"
                   onClick={() => setViewMode('list')}
-                  className={`w-9 h-9 rounded-md flex items-center justify-center transition-all ${
+                  className={`w-9 h-9 rounded-md flex items-center justify-center transition-all cursor-pointer ${
                     viewMode === 'list'
                       ? 'bg-surface-container-lowest text-primary shadow-xs'
                       : 'text-on-surface-variant hover:text-on-surface'
@@ -404,7 +290,31 @@ export default function CatalogPage({
       {/* 3. Product Grid & Empty State */}
       <section className="w-full bg-surface pb-space-xl">
         <div className="max-w-7xl mx-auto px-gutter">
-          {filteredProducts.length === 0 ? (
+          {/* Loading Skeleton */}
+          {loading && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter animate-pulse">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="rounded-2xl bg-surface-container-lowest p-4 border border-surface-container space-y-4">
+                  <div className="w-full h-64 bg-surface-container-low rounded-xl" />
+                  <div className="h-4 bg-surface-container-low rounded w-1/4" />
+                  <div className="h-6 bg-surface-container-low rounded w-3/4" />
+                  <div className="h-10 bg-surface-container-low rounded mt-4" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && !loading && (
+            <div className="p-space-xl rounded-2xl bg-error-container/20 border border-error-container text-center space-y-2 my-8">
+              <span className="material-symbols-outlined text-error text-[40px]">error</span>
+              <h3 className="font-headline-sm text-error font-bold">{error}</h3>
+              <p className="font-body-md text-on-surface-variant">Vui lòng đảm bảo server Banova.Api đang chạy trên cổng 5252.</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && products.length === 0 && (
             <div className="p-space-xl rounded-2xl bg-surface-container-lowest text-center space-y-3 border border-surface-container my-8">
               <span className="material-symbols-outlined text-outline text-[48px]">search_off</span>
               <h3 className="font-headline-sm text-headline-sm text-primary font-bold">
@@ -418,14 +328,17 @@ export default function CatalogPage({
                 onClick={() => {
                   setSearchQuery('');
                   setSelectedCategory('all');
-                  setSelectedBenefit(null);
+                  setPage(1);
                 }}
-                className="inline-flex items-center gap-1.5 px-space-md py-2 rounded-xl bg-primary-container text-on-primary font-label-md font-bold"
+                className="inline-flex items-center gap-1.5 px-space-md py-2 rounded-xl bg-primary-container text-on-primary font-label-md font-bold cursor-pointer"
               >
                 Xóa tất cả bộ lọc
               </button>
             </div>
-          ) : (
+          )}
+
+          {/* Products List */}
+          {!loading && !error && products.length > 0 && (
             <div 
               className={
                 viewMode === 'grid'
@@ -433,7 +346,7 @@ export default function CatalogPage({
                   : 'grid grid-cols-1 gap-space-md'
               }
             >
-              {filteredProducts.map((product) => (
+              {products.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -446,38 +359,55 @@ export default function CatalogPage({
           )}
 
           {/* Pagination & Status */}
-          <div className="pt-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-md">
-            <p className="font-body-sm text-body-sm text-on-surface-variant">
-              Hiển thị <strong>1–{filteredProducts.length}</strong> trong tổng số <strong>{filteredProducts.length}</strong> sản phẩm dinh dưỡng
-            </p>
-            <div className="flex items-center gap-space-xs">
-              <button 
-                type="button"
-                disabled 
-                className="px-space-md h-10 rounded-xl bg-surface-container-low text-outline font-label-md text-label-md cursor-not-allowed"
-              >
-                Trang trước
-              </button>
-              <button 
-                type="button"
-                className="w-10 h-10 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-bold shadow-xs"
-              >
-                1
-              </button>
-              <button 
-                type="button"
-                className="w-10 h-10 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors"
-              >
-                2
-              </button>
-              <button 
-                type="button"
-                className="px-space-md h-10 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors"
-              >
-                Tiếp theo
-              </button>
+          {!loading && !error && products.length > 0 && (
+            <div className="pt-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-md">
+              <p className="font-body-sm text-body-sm text-on-surface-variant">
+                Trang <strong>{meta.page}</strong> / <strong>{meta.totalPages || 1}</strong> — Tổng <strong>{meta.total || products.length}</strong> sản phẩm
+              </p>
+              <div className="flex items-center gap-space-xs">
+                <button 
+                  type="button"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className={`px-space-md h-10 rounded-xl font-label-md text-label-md transition-colors ${
+                    page <= 1 
+                      ? 'bg-surface-container-low text-outline cursor-not-allowed' 
+                      : 'bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer'
+                  }`}
+                >
+                  Trang trước
+                </button>
+
+                {Array.from({ length: meta.totalPages || 1 }, (_, i) => i + 1).map((pNum) => (
+                  <button 
+                    key={pNum}
+                    type="button"
+                    onClick={() => setPage(pNum)}
+                    className={`w-10 h-10 rounded-xl font-label-md text-label-md font-bold transition-all cursor-pointer ${
+                      pNum === page
+                        ? 'bg-primary-container text-on-primary shadow-xs'
+                        : 'bg-surface-container-low text-on-surface hover:bg-surface-container'
+                    }`}
+                  >
+                    {pNum}
+                  </button>
+                ))}
+
+                <button 
+                  type="button"
+                  disabled={page >= (meta.totalPages || 1)}
+                  onClick={() => setPage((p) => Math.min(meta.totalPages || 1, p + 1))}
+                  className={`px-space-md h-10 rounded-xl font-label-md text-label-md transition-colors ${
+                    page >= (meta.totalPages || 1)
+                      ? 'bg-surface-container-low text-outline cursor-not-allowed'
+                      : 'bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer'
+                  }`}
+                >
+                  Tiếp theo
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

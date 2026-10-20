@@ -1,13 +1,45 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
+import { api } from '../services';
 
 export default function ArticleDetailPage({
-  article,
+  article: initialArticle,
   onNavigate = () => {},
   onAddToCart = () => {}
 }) {
+  const { slug } = useParams();
+  const [article, setArticle] = useState(initialArticle || null);
+  const [loading, setLoading] = useState(!initialArticle && !!slug);
+  const [error, setError] = useState(null);
+
   const [readingProgress, setReadingProgress] = useState(0);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (slug) {
+      async function fetchArticle() {
+        try {
+          setLoading(true);
+          setError(null);
+          const res = await api.articles.detail(slug);
+          if (isMounted && res.data) {
+            setArticle(res.data);
+          }
+        } catch (err) {
+          if (isMounted) {
+            console.error('[ArticleDetailPage] Lỗi tải bài viết:', err);
+            setError(err);
+          }
+        } finally {
+          if (isMounted) setLoading(false);
+        }
+      }
+      fetchArticle();
+    }
+    return () => { isMounted = false; };
+  }, [slug]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -581,7 +613,7 @@ export default function ArticleDetailPage({
                   </span>
                 </div>
                 <p className="font-body-sm text-on-tertiary-fixed/90 leading-relaxed">
-                  Thông tin đăng tải trong bài viết nhằm mục đích giáo dục kiến thức dinh dưỡng y học và sinh học phân tử hệ vi sinh đường ruột. Tinh bột kháng Banova là thực phẩm bổ sung tự nhiên giàu dinh dưỡng, không phải là thuốc và không thay thế thuốc điều trị hạ đường huyết hoặc phác đồ insulin do bác sĩ chuyên khoa nội tiết chỉ định. Vui lòng tham khảo ý kiến chuyên gia y tế trước khi thực hiện các thay đổi lớn trong chế độ ăn kiểm soát đái tháo đường.
+                  Thông tin đăng tải trong bài viết nhằm mục đích giáo dục kiến thức dinh dưỡng y học và sinh học phân tử hệ vi sinh đường ruột. Tinh bột kháng Banova là thực phẩm bổ sung tự nhiên giàu dinh dưỡng, sản phẩm không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh. Vui lòng tham khảo ý kiến chuyên gia y tế trước khi thực hiện các thay đổi lớn trong chế độ ăn kiểm soát đái tháo đường.
                 </p>
               </section>
 

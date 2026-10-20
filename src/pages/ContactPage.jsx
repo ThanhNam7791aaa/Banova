@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { contactService } from '../services/contactService';
+import { api } from '../services';
 import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
 
 export const ContactPage = () => {
@@ -12,12 +12,14 @@ export const ContactPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage(null);
     try {
-      await contactService.submitContact(formData);
+      await api.contact.send(formData);
       setSubmitSuccess(true);
       setFormData({
         fullName: '',
@@ -27,7 +29,8 @@ export const ContactPage = () => {
         message: ''
       });
     } catch (err) {
-      console.error(err);
+      console.error('[ContactPage] Lỗi gửi liên hệ:', err);
+      setErrorMessage(err.message || 'Không thể gửi tin nhắn lúc này. Vui lòng liên hệ Hotline 1900 6822.');
     } finally {
       setIsSubmitting(false);
     }
@@ -71,6 +74,16 @@ export const ContactPage = () => {
                   <p className="font-body-sm">
                     Đội ngũ chuyên viên dinh dưỡng Banova đã nhận được yêu cầu và sẽ liên hệ hỗ trợ bạn sớm nhất.
                   </p>
+                </div>
+              </div>
+            )}
+
+            {errorMessage && (
+              <div className="p-space-md rounded-2xl bg-error-container/30 border border-error text-error flex items-start gap-3">
+                <span className="material-symbols-outlined text-error text-[24px]">error</span>
+                <div>
+                  <h4 className="font-label-lg font-bold">Không thể gửi yêu cầu</h4>
+                  <p className="font-body-sm">{errorMessage}</p>
                 </div>
               </div>
             )}

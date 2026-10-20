@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { contactService } from '../../services/contactService';
+import { api } from '../../services';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState(null);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
     if (email.trim()) {
       setLoading(true);
+      setFeedbackMsg(null);
       try {
-        await contactService.subscribeNewsletter(email.trim());
+        await api.newsletter.subscribe(email.trim());
         setSubscribed(true);
-        setTimeout(() => setSubscribed(false), 4000);
+        setFeedbackMsg('✓ Đã đăng ký nhận bản tin thành công!');
+        setTimeout(() => {
+          setSubscribed(false);
+          setFeedbackMsg(null);
+        }, 4000);
         setEmail('');
       } catch (err) {
-        console.error(err);
+        if (err.code === 'CONFLICT' || err.status === 409) {
+          setFeedbackMsg('Email này đã được đăng ký trước đó.');
+        } else {
+          setFeedbackMsg(err.message || 'Không thể đăng ký lúc này.');
+        }
       } finally {
         setLoading(false);
       }
@@ -193,7 +203,7 @@ export default function Footer() {
                   className="w-full h-11 px-space-md rounded-xl bg-secondary text-on-secondary font-label-lg text-label-lg font-bold hover:bg-secondary-fixed hover:text-on-secondary-fixed transition-colors flex items-center justify-center gap-2" 
                   type="submit"
                 >
-                  {loading ? 'Đang đăng ký...' : subscribed ? '✓ Đã đăng ký thành công!' : 'Đăng ký ngay'}
+                  {loading ? 'Đang gửi...' : feedbackMsg ? feedbackMsg : 'Đăng ký ngay'}
                 </button>
               </div>
             </form>
