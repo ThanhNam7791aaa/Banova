@@ -42,7 +42,7 @@ const FAQ_DATA = [
     id: 'faq-07',
     category: 'thich-nghi',
     question: 'Sản phẩm có thể dùng thay thế thuốc chữa bệnh dạ dày hoặc đại tràng không?',
-    answer: 'Không. Tinh bột kháng Banova là thực phẩm bổ sung dinh dưỡng tự nhiên từ chuối xanh, hỗ trợ nuôi dưỡng hệ vi sinh và cải thiện sức khỏe đường tiêu hóa. Sản phẩm không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh. Quý khách đang điều trị y khoa nên tham khảo ý kiến bác sĩ điều trị để kết hợp chế độ ăn tối ưu.'
+    answer: 'Không. Tinh bột kháng Banova là thực phẩm bổ sung dinh dưỡng tự nhiên từ chuối xanh, hỗ trợ nuôi dưỡng hệ vi sinh và cải thiện sức khỏe đường tiêu hóa. Sản phẩm không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh. Quý khách đang hỗ trợ cải thiện y khoa nên tham khảo ý kiến bác sĩ hỗ trợ cải thiện để kết hợp chế độ ăn tối ưu.'
   }
 ];
 

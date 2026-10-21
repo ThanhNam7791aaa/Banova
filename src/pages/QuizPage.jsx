@@ -10,6 +10,17 @@ export default function QuizPage({
   const [showResult, setShowResult] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverQuizResult, setServerQuizResult] = useState(null);
+  const [catalogProducts, setCatalogProducts] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    api.products.list().then(res => {
+      if (isMounted && res?.data) {
+        setCatalogProducts(res.data);
+      }
+    }).catch(() => {});
+    return () => { isMounted = false; };
+  }, []);
 
   // Lưu trữ câu trả lời của người dùng theo đúng shape BE quy ước
   const [answers, setAnswers] = useState({
@@ -74,7 +85,7 @@ export default function QuizPage({
   const getRecommendedProduct = () => {
     if (answers.morning_routine === 'bakery') {
       return {
-        id: 'prod-04',
+        id: (catalogProducts.find(p => p.slug.includes('banh'))?.id || catalogProducts[1]?.id || 'prod-04'),
         name: 'Bánh Quy Nguyên Cám Prebiotic Chuối Xanh',
         price: 39000,
         formattedPrice: '39.000 ₫',
@@ -87,7 +98,7 @@ export default function QuizPage({
       };
     } else if (answers.goal === 'family-breakfast') {
       return {
-        id: 'prod-05',
+        id: (catalogProducts.find(p => p.slug.includes('bua-sang') || p.slug.includes('combo'))?.id || catalogProducts[2]?.id || 'prod-05'),
         name: 'Combo Bữa Sáng Gut-Health (Bột 250g + Bánh quy + Shaker)',
         price: 125000,
         formattedPrice: '125.000 ₫',
@@ -102,7 +113,7 @@ export default function QuizPage({
 
     // Mặc định: Hộp 10 gói 15g tiện lợi
     return {
-      id: 'prod-03',
+      id: (catalogProducts.find(p => p.slug.includes('goi') || p.slug.includes('hop'))?.id || catalogProducts[0]?.id || 'prod-03'),
       name: 'Bột Tinh Bột Kháng Banova Hộp 10 Gói 15g Tiện Lợi',
       price: 69000,
       formattedPrice: '69.000 ₫',

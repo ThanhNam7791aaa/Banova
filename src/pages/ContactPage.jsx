@@ -4,7 +4,7 @@ import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
 
 export const ContactPage = () => {
   const [formData, setFormData] = useState({
-    fullName: '',
+    name: '',
     phone: '',
     email: '',
     topic: 'tu-van-dinh-duong',
@@ -22,7 +22,7 @@ export const ContactPage = () => {
       await api.contact.send(formData);
       setSubmitSuccess(true);
       setFormData({
-        fullName: '',
+        name: '',
         phone: '',
         email: '',
         topic: 'tu-van-dinh-duong',
@@ -97,8 +97,8 @@ export const ContactPage = () => {
                   <input
                     type="text"
                     required
-                    value={formData.fullName}
-                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Nguyễn Văn A"
                     className="w-full h-11 px-space-md rounded-xl bg-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent font-body-md"
                   />

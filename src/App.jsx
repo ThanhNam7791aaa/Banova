@@ -1,3 +1,5 @@
+import ErrorBoundary from './components/common/ErrorBoundary';
+import NotFoundPage from './pages/NotFoundPage';
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout';
@@ -78,6 +80,7 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <ErrorBoundary>
       <MainLayout
         currentPath={location.pathname}
         onNavigate={handleNavigate}
@@ -219,9 +222,10 @@ export default function App() {
           />
 
           {/* 11. Fallback Route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </MainLayout>
+    </ErrorBoundary>
     </>
   );
 }

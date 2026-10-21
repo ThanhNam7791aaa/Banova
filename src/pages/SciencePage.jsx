@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
-import { api } from '../services';
+import { api, mapArticle } from '../services';
 
 export const ARTICLES_DATA_FALLBACK = [
   {
@@ -46,7 +46,8 @@ export default function SciencePage({
 
         const res = await api.articles.list(params);
         if (isMounted && res.data) {
-          setArticles(res.data);
+          const mapped = Array.isArray(res.data) ? res.data.map(mapArticle) : [];
+          setArticles(mapped);
         }
       } catch (err) {
         console.warn('[SciencePage] API fetch articles fallback:', err);
@@ -356,7 +357,7 @@ export default function SciencePage({
                 <div className="relative h-48 overflow-hidden bg-surface-container">
                   <div 
                     className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" 
-                    style={{ backgroundImage: `url('${art.image}')` }}
+                    style={{ backgroundImage: `url('${art.image || art.thumbnail}')` }}
                   />
                   <div className="absolute top-3 left-3">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full font-label-sm text-label-sm font-bold shadow-xs ${
@@ -396,7 +397,7 @@ export default function SciencePage({
                         arrow_forward
                       </span>
                     </span>
-                    <span className="text-outline text-xs">#{art.tags[0]}</span>
+                    <span className="text-outline text-xs">#{art.tags?.[0] || (art.type === 'SCIENCE' ? 'KhoaHocRS2' : 'DinhDuong')}</span>
                   </div>
                 </div>
               </article>

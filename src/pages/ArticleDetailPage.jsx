@@ -55,6 +55,46 @@ export default function ArticleDetailPage({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto px-gutter py-24 text-center space-y-6 animate-pulse">
+        <div className="h-8 bg-surface-container-low rounded-xl w-3/4 mx-auto" />
+        <div className="h-5 bg-surface-container-low rounded-lg w-1/2 mx-auto" />
+        <div className="w-full aspect-[21/9] bg-surface-container-low rounded-2xl" />
+        <div className="space-y-3 pt-6">
+          <div className="h-4 bg-surface-container-low rounded w-full" />
+          <div className="h-4 bg-surface-container-low rounded w-5/6" />
+          <div className="h-4 bg-surface-container-low rounded w-4/6" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || (!article && !loading)) {
+    return (
+      <div className="max-w-3xl mx-auto px-gutter py-24 text-center space-y-6">
+        <div className="w-20 h-20 rounded-full bg-error-container/40 text-error flex items-center justify-center mx-auto">
+          <span className="material-symbols-outlined text-[40px]">article</span>
+        </div>
+        <h2 className="font-headline-lg text-primary font-bold">
+          {error?.message || 'Không tìm thấy bài viết khoa học'}
+        </h2>
+        <p className="font-body-md text-on-surface-variant max-w-md mx-auto">
+          Bài viết này không tồn tại hoặc đã được chuyển sang danh mục khác. Vui lòng quay lại danh sách bài viết.
+        </p>
+        <div className="pt-2">
+          <Link
+            to="/khoa-hoc"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-on-primary font-label-lg font-bold shadow-sm hover:bg-primary-container transition-all"
+          >
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <span>Về Góc Khoa Học</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopiedLink(true);

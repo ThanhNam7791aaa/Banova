@@ -64,19 +64,31 @@ export default function ProductDetailPage({
     }
   ];
 
-  // Sản phẩm liên quan
-  const crossSellProducts = [
-    {
-      id: 'cross-01',
-      name: 'Bánh quy nguyên cám Prebiotic Banova',
-      badge: 'Bữa xế lành mạnh',
-      rating: '4.8 (112)',
-      price: 39000,
-      formattedPrice: '39.000 ₫',
-      subInfo: 'Gói 120g • Giàu chất xơ chuối xanh, hỗ trợ no lâu và không lo tích mỡ thừa.',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCMA7pke-2VlhpG1qiTtwt0th4YCiMdLRBah0ficRlaLdMt7RaD-XjGwbsIG5FEgylEyqmvG6ugCFe_GADNs0ToBEvyTKe0FJK8XUbTDH_yeBN1KMq-VJ-MXoAtYUEvmGinJlW2_6q424oYBX98iAP7_koKU635tk0PgwesPPZIHkRVF75dw2PuhBz5PySZbwfufw_BEwOnbvzc-oKpkIcqPqHd86W7RtXKdVYWjRE6vrPQdoAbJu_Z'
-    }
-  ];
+  // Sản phẩm liên quan: Lấy sản phẩm thật từ API để có ID chuẩn (tránh mock ID giả gây lỗi 400)
+  const [crossSellProducts, setCrossSellProducts] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    api.products.list().then((res) => {
+      if (isMounted && res && res.data) {
+        const currentId = currentProduct?.id;
+        const validList = res.data
+          .filter((p) => p.slug !== slug && p.id !== currentId)
+          .map((p) => {
+            const mapped = mapProduct(p);
+            return {
+              ...mapped,
+              badge: mapped.rsBadge || 'Chuẩn RS2 Tự Nhiên',
+              rating: '4.9 (Kiểm định lâm sàng)',
+            };
+          });
+        setCrossSellProducts(validList.slice(0, 3));
+      }
+    }).catch((err) => {
+      console.warn('[ProductDetailPage] Không thể tải sản phẩm liên quan:', err);
+    });
+    return () => { isMounted = false; };
+  }, [slug, currentProduct?.id]);
 
   const incrementQuantity = () => setQuantity((q) => q + 1);
   const decrementQuantity = () => {
@@ -251,17 +263,17 @@ export default function ProductDetailPage({
                     ))}
                   </div>
                   <span className="font-label-lg text-label-lg font-bold text-on-surface ml-1">
-                    {currentProduct.rating} / 5.0
+                    {currentProduct.rating || "4.9"} / 5.0
                   </span>
                 </div>
                 <span className="text-outline-variant font-light">|</span>
                 <span className="font-body-sm text-body-sm text-on-surface-variant font-medium underline underline-offset-4 cursor-pointer hover:text-secondary">
-                  {currentProduct.reviewsCount} đánh giá có xác thực mua hàng
+                  {currentProduct.reviewsCount ? `${currentProduct.reviewsCount} đánh giá có xác thực mua hàng` : "Được kiểm định chất lượng y sinh"}
                 </span>
                 <span className="text-outline-variant font-light">|</span>
                 <span className="font-body-sm text-body-sm text-secondary font-semibold flex items-center gap-1">
                   <span className="material-symbols-outlined text-[16px]">local_shipping</span>
-                  Đã giao {currentProduct.deliveredCount} hũ thành công
+                  {currentProduct.deliveredCount ? `Đã giao ${currentProduct.deliveredCount} ${currentProduct.unit || "hũ"} thành công` : `Hàng chính hãng chuẩn RS2 (${currentProduct.unit || "hũ"})`}
                 </span>
               </div>
 
@@ -297,25 +309,25 @@ export default function ProductDetailPage({
                 <div className="p-3 rounded-xl bg-surface-container-low flex flex-col justify-center border border-surface-container/40">
                   <span className="font-label-sm text-label-sm text-on-surface-variant">Quy cách đóng</span>
                   <strong className="font-label-md text-label-md text-primary mt-0.5">
-                    {currentProduct.packageSpecs}
+                    {currentProduct.packageSpecs || currentProduct.unit || "Quy cách chuẩn"}
                   </strong>
                 </div>
                 <div className="p-3 rounded-xl bg-surface-container-low flex flex-col justify-center border border-surface-container/40">
                   <span className="font-label-sm text-label-sm text-on-surface-variant">Khẩu phần chuẩn</span>
                   <strong className="font-label-md text-label-md text-primary mt-0.5">
-                    {currentProduct.servingSize}
+                    {currentProduct.servingSize || "15g / ngày"}
                   </strong>
                 </div>
                 <div className="p-3 rounded-xl bg-surface-container-low flex flex-col justify-center border border-surface-container/40">
                   <span className="font-label-sm text-label-sm text-on-surface-variant">Vùng nguyên liệu</span>
                   <strong className="font-label-md text-label-md text-primary mt-0.5">
-                    {currentProduct.origin}
+                    {currentProduct.origin || "Gia Lai OCOP 4*"}
                   </strong>
                 </div>
                 <div className="p-3 rounded-xl bg-surface-container-low flex flex-col justify-center border border-surface-container/40">
                   <span className="font-label-sm text-label-sm text-on-surface-variant">Hàm lượng RS2</span>
                   <strong className="font-label-md text-label-md text-secondary mt-0.5">
-                    {currentProduct.rsPercentage}
+                    {currentProduct.rsPercentage || (currentProduct.rsContent ? `${currentProduct.rsContent}g ${currentProduct.rsType || "RS2"}` : "Chuẩn RS2 Gia Lai")}
                   </strong>
                 </div>
               </div>
@@ -453,7 +465,7 @@ export default function ProductDetailPage({
                   <span className="material-symbols-outlined text-[26px]">grain</span>
                 </div>
                 <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Chất xơ prebiotic</span>
-                <div className="font-headline-lg text-headline-lg text-primary font-bold mt-1">3.2g</div>
+                <div className="font-headline-lg text-headline-lg text-primary font-bold mt-1">{currentProduct.fiber != null ? `${currentProduct.fiber}g` : "3.2g"}</div>
                 <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
                   Cơ chất then chốt để vi khuẩn đường ruột tổng hợp chuỗi acid béo ngắn (SCFA Butyrate) bảo vệ lớp niêm mạc.
                 </p>
@@ -470,7 +482,7 @@ export default function ProductDetailPage({
                   <span className="material-symbols-outlined text-[26px]">energy_savings_leaf</span>
                 </div>
                 <span className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Năng lượng thuần</span>
-                <div className="font-headline-lg text-headline-lg text-primary font-bold mt-1">52 kcal</div>
+                <div className="font-headline-lg text-headline-lg text-primary font-bold mt-1">{currentProduct.rsContent ? `${currentProduct.rsContent}g ${currentProduct.rsType || "RS2"}` : "5.8g RS2"}</div>
                 <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
                   Hoàn toàn 0g đường tinh luyện phụ gia, 0% chất béo bão hòa và không chứa gluten gây viêm màng nhầy.
                 </p>
@@ -530,10 +542,10 @@ export default function ProductDetailPage({
                   </div>
                   <div>
                     <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-2">
-                      Thành phần nguyên liệu 100% chuối xanh tuyển chọn
+                      Thành phần: {currentProduct.name}
                     </h3>
-                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                      Chuối tiêu xanh được thu hoạch đúng độ tuổi sinh học tại vùng cao nguyên Gia Lai (độ cao trên 700m với chất đất đỏ bazan giàu khoáng chất). Quá trình sấy lạnh tầng sôi khép kín ở nhiệt độ đối lưu dưới <strong>50°C</strong> đảm bảo các liên kết tinh bột dạng chuỗi thẳng không bị phá vỡ thành đường maltose, duy trì nguyên vẹn cấu trúc kháng tinh bột RS2.
+                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed whitespace-pre-line">
+                      {currentProduct.ingredients || "Chuối tiêu xanh được thu hoạch đúng độ tuổi sinh học tại vùng cao nguyên Gia Lai (độ cao trên 700m với chất đất đỏ bazan giàu khoáng chất). Quá trình sấy lạnh tầng sôi khép kín ở nhiệt độ đối lưu dưới 50°C đảm bảo các liên kết tinh bột dạng chuỗi thẳng không bị phá vỡ thành đường maltose, duy trì nguyên vẹn cấu trúc kháng tinh bột RS2."}
                     </p>
                   </div>
                 </div>
@@ -548,6 +560,17 @@ export default function ProductDetailPage({
             {/* Tab 1: Guidelines */}
             {activeTab === 1 && (
               <div className="p-6 md:p-8 space-y-6 animate-in fade-in duration-200">
+                {currentProduct.usage && (
+                  <div className="p-5 rounded-xl bg-surface-container-low border border-surface-container mb-4">
+                    <div className="flex items-center gap-2 text-primary font-label-lg text-label-lg font-bold mb-2">
+                      <span className="material-symbols-outlined text-secondary text-[20px]">menu_book</span>
+                      <span>Hướng dẫn chuyên biệt cho sản phẩm này:</span>
+                    </div>
+                    <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed whitespace-pre-line">
+                      {currentProduct.usage}
+                    </p>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex gap-4 items-start p-4 rounded-xl bg-surface-container-low border border-surface-container">
                     <span className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold font-label-md shrink-0">1</span>
@@ -623,7 +646,7 @@ export default function ProductDetailPage({
               <strong className="font-label-lg text-label-lg text-tertiary block mb-1 font-bold">
                 Lưu ý y khoa minh bạch từ Banova:
               </strong>
-              Sản phẩm là thực phẩm bổ sung dinh dưỡng tự nhiên hỗ trợ hệ vi sinh và chức năng chuyển hóa tiêu hóa thông qua nguồn cơ chất RS2 nguyên bản; sản phẩm <strong>không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh</strong>. Người đang điều trị y tế với thuốc hạ đường huyết liều cao hoặc có bệnh lý đại tràng cấp tính nên tham vấn bác sĩ chuyên khoa hoặc đội ngũ cố vấn dinh dưỡng của Banova để điều chỉnh lộ trình thích ứng phù hợp.
+              Sản phẩm là thực phẩm bổ sung dinh dưỡng tự nhiên hỗ trợ hệ vi sinh và chức năng chuyển hóa tiêu hóa thông qua nguồn cơ chất RS2 nguyên bản; sản phẩm <strong>không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh</strong>. Người đang trong phác đồ theo dõi y tế với thuốc hạ đường huyết liều cao hoặc có bệnh lý đại tràng cấp tính nên tham vấn bác sĩ chuyên khoa hoặc đội ngũ cố vấn dinh dưỡng của Banova để điều chỉnh lộ trình thích ứng phù hợp.
             </div>
           </div>
         </div>

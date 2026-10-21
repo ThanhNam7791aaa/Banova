@@ -926,10 +926,21 @@ export default function CheckoutPage({
                   </div>
                 </div>
 
+                {/* Thông báo lỗi khi submit đặt hàng (B2-09) */}
+                {orderError && (
+                  <div className="p-4 rounded-xl bg-error-container/40 border border-error text-error text-body-sm flex items-start gap-2.5 animate-in fade-in">
+                    <span className="material-symbols-outlined text-[20px] shrink-0 mt-0.5">error</span>
+                    <div className="space-y-0.5">
+                      <strong className="block font-semibold">Không thể gửi đơn hàng:</strong>
+                      <span>{orderError}</span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Checkout Trigger Button (CTA Nổi bật) */}
                 <button 
                   type="button"
-                  disabled={cartItems.length === 0}
+                  disabled={cartItems.length === 0 || isSubmitting}
                   onClick={() => {
                     if (currentStep === 1) {
                       setCurrentStep(2);
@@ -943,26 +954,17 @@ export default function CheckoutPage({
                     lock_clock
                   </span>
                   <span>
-                    {currentStep === 1 
-                      ? `Tiến hành đặt hàng (${formatVND(finalTotal)})` 
-                      : `Xác nhận đặt hàng mô phỏng (${formatVND(finalTotal)})`
+                    {isSubmitting 
+                      ? 'Đang xử lý đặt hàng...' 
+                      : (currentStep === 1 
+                        ? `Tiến hành đặt hàng (${formatVND(finalTotal)})` 
+                        : `Xác nhận đặt hàng mô phỏng (${formatVND(finalTotal)})`
+                      )
                     }
                   </span>
                 </button>
 
-                {/* Nút phụ: Xem trước màn hình hoàn tất đơn hàng */}
-                <div className="text-center pt-1">
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      handleSubmitOrder();
-                    }}
-                    className="font-label-sm text-[12px] text-secondary font-bold hover:underline transition-colors flex items-center justify-center gap-1 mx-auto cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">visibility</span>
-                    <span>Xem trước màn hình hoàn tất đơn hàng</span>
-                  </button>
-                </div>
+                
 
                 {/* Huy hiệu cam kết & bảo chứng */}
                 <div className="space-y-2.5 pt-3 border-t border-surface-container text-on-surface-variant text-xs font-medium">
