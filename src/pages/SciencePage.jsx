@@ -25,6 +25,7 @@ export default function SciencePage({
 }) {
   const [currentFilter, setCurrentFilter] = useState('all'); // 'all' | 'science' | 'blog'
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -341,7 +342,7 @@ export default function SciencePage({
             </p>
           </div>
           <div className="hidden sm:flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-            <span>Hiển thị {filteredArticles.length} bài viết</span>
+            <span>Hiển thị {displayArticles.length} bài viết</span>
           </div>
         </div>
 
