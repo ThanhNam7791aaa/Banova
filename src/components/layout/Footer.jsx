@@ -50,7 +50,7 @@ export default function Footer() {
                 BANOVA
               </span>
             </Link>
-            <p className="font-body-sm text-body-sm text-on-primary-container leading-relaxed">
+            <p className="font-body-sm text-[13px] text-on-primary-container leading-relaxed">
               Dinh dưỡng đột phá từ vùng đất Gia Lai bạt ngàn tự nhiên, giàu kháng tinh bột RS2 tự nhiên hỗ trợ hệ vi sinh microbiome khỏe mạnh và chuyển hóa bền vững.
             </p>
             {/* Huy hiệu chứng nhận */}
@@ -69,7 +69,7 @@ export default function Footer() {
               </span>
             </div>
             {/* Thông tin liên hệ trực tiếp */}
-            <div className="font-body-sm text-body-sm text-on-primary-container pt-space-xs space-y-1">
+            <div className="font-body-sm text-[13px] text-on-primary-container pt-space-xs space-y-1">
               <p className="flex items-center gap-2">
                 <span className="material-symbols-outlined text-[16px] text-secondary-fixed">call</span>
                 Hotline: <strong className="text-on-primary">1900 6822</strong>
@@ -86,7 +86,7 @@ export default function Footer() {
             <h3 className="font-label-lg text-label-lg text-on-primary uppercase tracking-wider font-bold">
               Danh mục sản phẩm
             </h3>
-            <ul className="space-y-space-sm font-body-sm text-body-sm text-on-primary-container">
+            <ul className="space-y-space-sm font-body-sm text-[13px] text-on-primary-container">
               <li>
                 <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
@@ -131,7 +131,7 @@ export default function Footer() {
             <h3 className="font-label-lg text-label-lg text-on-primary uppercase tracking-wider font-bold">
               Hỗ trợ khách hàng
             </h3>
-            <ul className="space-y-space-sm font-body-sm text-body-sm text-on-primary-container">
+            <ul className="space-y-space-sm font-body-sm text-[13px] text-on-primary-container">
               <li>
                 <Link 
                   className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
@@ -185,7 +185,7 @@ export default function Footer() {
             <h3 className="font-label-lg text-label-lg text-on-primary uppercase tracking-wider font-bold">
               Bản tin sức khỏe
             </h3>
-            <p className="font-body-sm text-body-sm text-on-primary-container">
+            <p className="font-body-sm text-[13px] text-on-primary-container">
               Đăng ký nhận "Cẩm nang dinh dưỡng đường ruột &amp; Microbiome học" định kỳ từ chuyên gia Banova.
             </p>
             <form className="space-y-space-xs" onSubmit={handleSubscribe}>

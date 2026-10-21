@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
 
 const FAQ_DATA = [
   {
@@ -165,8 +164,7 @@ export const FaqPage = () => {
           </div>
         </div>
 
-        {/* Medical Disclaimer */}
-        <MedicalDisclaimer />
+        {/* Disclaimer y tế đã render tập trung ở MainLayout */}
       </div>
     </div>
   );

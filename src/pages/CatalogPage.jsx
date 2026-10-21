@@ -152,7 +152,7 @@ export default function CatalogPage({
             <div className="flex items-center gap-space-sm p-space-sm rounded-xl bg-surface-container-lowest shadow-sm border border-surface-container">
               <span className="material-symbols-outlined text-secondary text-[24px]">inventory_2</span>
               <div>
-                <div className="font-label-lg text-label-lg text-primary font-bold">{meta.total || products.length} Sản phẩm</div>
+                <div className="font-label-lg text-label-lg text-primary font-bold">{loading ? '—' : (meta.total || products.length)} Sản phẩm</div>
                 <div className="font-body-sm text-body-sm text-on-surface-variant">Dữ liệu từ máy chủ</div>
               </div>
             </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
 import { api } from '../services';
 
 export default function ArticleDetailPage({
@@ -708,10 +707,7 @@ export default function ArticleDetailPage({
         </div>
       </div>
 
-      {/* 4. Khung Khuyến cáo Y Tế Bắt Buộc (Medical Disclaimer chuẩn với khiên y tế xanh) */}
-      <div className="max-w-7xl mx-auto px-gutter pb-space-xl w-full">
-        <MedicalDisclaimer />
-      </div>
+      {/* 4. Disclaimer y tế đã render tập trung ở MainLayout */}
     </div>
   );
 }

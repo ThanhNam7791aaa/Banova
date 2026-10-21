@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
 import { api, mapArticle } from '../services';
 
 export const ARTICLES_DATA_FALLBACK = [
@@ -575,10 +574,7 @@ export default function SciencePage({
         </div>
       </section>
 
-      {/* Khung Khuyến cáo Y Tế Bắt Buộc Chung */}
-      <div className="max-w-7xl mx-auto px-gutter pb-space-xl w-full">
-        <MedicalDisclaimer />
-      </div>
+      {/* Disclaimer y tế đã render tập trung ở MainLayout */}
     </div>
   );
 }

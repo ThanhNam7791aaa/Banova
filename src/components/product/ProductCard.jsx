@@ -51,13 +51,18 @@ export default function ProductCard({
       {/* Product Content */}
       <div className="p-space-md flex flex-col flex-1 justify-between gap-space-sm">
         <div>
-          <div className="flex items-center gap-1 text-tertiary-fixed-dim text-body-sm font-body-sm pb-1">
-            <span className="material-symbols-outlined text-[16px] text-tertiary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-              star
-            </span>
-            <span className="font-bold text-on-surface">{product.rating || '4.9'}</span>
-            <span className="text-outline">({product.reviewsCount || 48} đánh giá)</span>
-          </div>
+          {/* Chỉ hiện đánh giá khi BE thực sự có dữ liệu — không bịa số */}
+          {product.rating > 0 && (
+            <div className="flex items-center gap-1 text-tertiary-fixed-dim text-[13px] pb-1">
+              <span className="material-symbols-outlined text-[16px] text-tertiary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+                star
+              </span>
+              <span className="font-bold text-on-surface">{product.rating}</span>
+              {product.reviewsCount > 0 && (
+                <span className="text-outline">({product.reviewsCount} đánh giá)</span>
+              )}
+            </div>
+          )}
 
           <h2 
             onClick={() => onViewDetail(product)}
@@ -65,10 +70,6 @@ export default function ProductCard({
           >
             {product.name}
           </h2>
-
-          <p className="font-body-sm text-body-sm text-on-surface-variant pt-1">
-            {product.subInfo}
-          </p>
 
           {isList && (
             <p className="font-body-sm text-body-sm text-on-surface-variant pt-2 line-clamp-2 hidden sm:block">

@@ -41,11 +41,26 @@ export default function Header({ onOpenCart }) {
             to="/" 
             className="flex items-center gap-space-sm group"
           >
-            <img 
-              alt="Banova Logo" 
-              className="h-8 w-auto object-contain transition-transform group-hover:scale-105" 
-              src="https://lh3.googleusercontent.com/aida/AEtjO1WgP4WsIdxdYEdtPeHM3lCiPENS4A7Uly39qgS-H0AEr3vmJHDcitYxl5LUVCXeM7IcmcvtxNEK3oqtBXE9kvrzXplCmOZz4CngcxiTvLZPUhSFL7S-QRj0OaLJqyY5UTYliWCLrjaycvT_NSjuJwjiWC0Lc-NFcP6BQEJ51iyzRB2ps-BTH48RuTdb7gX23wam6mEydloIZoEGtuiIPgGFCCTEu7qy7Uu41id8kX_a6ydSH8-pUI120YE" 
-            />
+            {/* Logo dạng SVG nội tuyến: không phụ thuộc URL ngoài, không bao giờ vỡ ảnh */}
+            <svg
+              aria-hidden="true"
+              className="h-9 w-9 shrink-0 transition-transform group-hover:scale-105"
+              viewBox="0 0 40 40"
+              fill="none"
+            >
+              <rect width="40" height="40" rx="12" fill="#012d1d" />
+              <path
+                d="M20 8.5c5.6 3.4 8.8 8.3 8.8 13.9 0 5.6-3.9 9.8-8.8 9.8s-8.8-4.2-8.8-9.8c0-5.6 3.2-10.5 8.8-13.9Z"
+                fill="#92f7c3"
+              />
+              <path d="M20 12.5v17.5" stroke="#012d1d" strokeWidth="1.6" strokeLinecap="round" />
+              <path
+                d="M20 20.5c2.6-1.6 5-2.3 7.2-2.3M20 25.5c-2.4-1.4-4.7-2-6.8-2"
+                stroke="#012d1d"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+              />
+            </svg>
             <div className="flex flex-col">
               <span className="font-headline-sm text-headline-sm text-primary tracking-tight font-bold leading-none">
                 BANOVA

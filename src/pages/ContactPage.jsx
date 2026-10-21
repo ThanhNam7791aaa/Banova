@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { api } from '../services';
-import MedicalDisclaimer from '../components/layout/MedicalDisclaimer';
 
 export const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -264,8 +263,7 @@ export const ContactPage = () => {
           </div>
         </div>
 
-        {/* Khung cảnh báo y tế chuẩn NFR-09 */}
-        <MedicalDisclaimer />
+        {/* Disclaimer y tế đã render tập trung ở MainLayout */}
       </div>
     </div>
   );

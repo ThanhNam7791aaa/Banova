@@ -107,37 +107,22 @@ export default function HomeHero({ onNavigate = () => {} }) {
               </button>
             </div>
 
-            {/* 6. 4 Fast Metrics Strip: 4 ĐẶC TÍNH SẢN PHẨM ĐỒNG NHẤT */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 max-w-xl">
+            {/* 6. Hai chỉ số cốt lõi — bớt 4 thẻ để giảm nhiễu */}
+            <div className="grid grid-cols-2 gap-2.5 pt-2 max-w-sm">
               <div className="p-2.5 rounded-xl bg-surface-container-lowest shadow-xs flex flex-col justify-center border border-surface-container">
                 <span className="font-headline-sm text-headline-sm text-primary font-extrabold leading-none">72%</span>
                 <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">RS2 Tự nhiên</span>
               </div>
               <div className="p-2.5 rounded-xl bg-surface-container-lowest shadow-xs flex flex-col justify-center border border-surface-container">
-                <span className="font-headline-sm text-headline-sm text-secondary font-extrabold leading-none">100%</span>
-                <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">Chuối xanh Gia Lai</span>
-              </div>
-              <div className="p-2.5 rounded-xl bg-surface-container-lowest shadow-xs flex flex-col justify-center border border-surface-container">
                 <span className="font-headline-sm text-headline-sm text-primary font-extrabold leading-none">&lt; 45</span>
                 <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">Chỉ số GI Thấp</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-surface-container-lowest shadow-xs flex flex-col justify-center border border-surface-container">
-                <span className="font-headline-sm text-headline-sm text-secondary font-extrabold leading-none">0g</span>
-                <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">Đường phụ gia</span>
-              </div>
             </div>
 
-            {/* 7. Social Proof & Micro-trustline */}
-            <div className="flex items-center gap-2 pt-1 text-on-surface-variant text-body-sm text-[12px] flex-wrap">
-              <div className="flex items-center text-on-tertiary-container">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="material-symbols-outlined text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                ))}
-              </div>
-              <span><strong>4.9/5</strong> (5,000+ khách hàng tại Quy Nhơn &amp; toàn quốc)</span>
-              <span className="text-outline-variant hidden sm:inline">•</span>
-              <span className="text-secondary font-medium hidden sm:inline">⚡ Giao 2H Quy Nhơn</span>
-            </div>
+            {/* 7. Trustline ngắn — bỏ các con số chưa kiểm chứng (rating/khách hàng) */}
+            <p className="pt-1 text-on-surface-variant text-[13px]">
+              Giao hỏa tốc 2H tại TP. Quy Nhơn · Miễn phí vận chuyển toàn quốc
+            </p>
           </div>
 
           {/* CỘT HÌNH ẢNH SẢN PHẨM TRỰC DIỆN (Desktop: 5 cols) */}
@@ -153,15 +138,7 @@ export default function HomeHero({ onNavigate = () => {} }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-transparent pointer-events-none" />
               
-              {/* Floating Tag 1: Lên men SCFA Butyrate */}
-              <div className="absolute top-4 left-4 p-2.5 rounded-xl bg-surface-container-lowest/95 backdrop-blur-md shadow-md flex items-center gap-2 border border-surface-container">
-                <span className="material-symbols-outlined text-secondary text-[20px]">biotech</span>
-                <span className="font-label-sm text-label-sm text-primary font-bold">
-                  Kháng Thủy Phân Dạ Dày • Tạo Butyrate
-                </span>
-              </div>
-
-              {/* Floating Tag 2: Giá & Quy chuẩn trực tiếp (Bỏ badge trùng lặp) */}
+              {/* Floating Tag: Giá & Quy chuẩn trực tiếp */}
               <div className="absolute bottom-4 right-4 p-2.5 px-3.5 rounded-xl bg-primary/95 backdrop-blur-md text-on-primary shadow-md flex items-center gap-2 border border-primary-container">
                 <span className="material-symbols-outlined text-secondary-fixed text-[20px]">sell</span>
                 <div className="flex flex-col text-right">
