@@ -89,6 +89,14 @@ export default function ProductCard({
               </span>
             )}
           </div>
+          {product.spec && product.spec.includes('muỗng') && (
+            <div className="flex items-center gap-1 mt-1">
+              <span className="material-symbols-outlined text-secondary text-[14px]">kitchen</span>
+              <span className="font-label-sm text-[11px] text-secondary font-bold">
+                {product.spec.replace('Hũ ', '').replace('Combo ', '')}
+              </span>
+            </div>
+          )}
 
           <div className="flex items-center gap-space-xs">
             <button 

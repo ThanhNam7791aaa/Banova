@@ -23,7 +23,7 @@ export const contactService = {
    */
   async subscribeNewsletter(email) {
     return apiClient(
-      '/newsletter/subscribe',
+      '/newsletter',
       {
         method: 'POST',
         body: JSON.stringify({ email })

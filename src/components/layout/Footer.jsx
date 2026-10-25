@@ -227,6 +227,12 @@ export default function Footer() {
             <a aria-label="YouTube" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://youtube.com" target="_blank" rel="noreferrer">
               <span className="material-symbols-outlined text-[18px]">smart_display</span>
             </a>
+            <a aria-label="TikTok Shop" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://tiktok.com" target="_blank" rel="noreferrer">
+              <span className="material-symbols-outlined text-[18px]">video_collection</span>
+            </a>
+            <a aria-label="Shopee" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://shopee.vn" target="_blank" rel="noreferrer">
+              <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+            </a>
           </div>
         </div>
       </div>

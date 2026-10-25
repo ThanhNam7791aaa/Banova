@@ -4,8 +4,8 @@
  * khi Backend API đang trong quá trình phát triển (Chờ BE).
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
-const IS_MOCK_FALLBACK_ENABLED = true;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+const IS_MOCK_FALLBACK_ENABLED = !API_BASE_URL;
 
 /**
  * Giả lập delay mạng cho Mock data (200ms - 500ms) để trải nghiệm giao diện mượt mà và thực tế

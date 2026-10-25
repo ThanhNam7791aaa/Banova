@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../store/cartStore';
 
-export default function Header({ onOpenCart }) {
+export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang-chu', onNavigate = () => {} }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const storeCartCount = useCartStore((state) => state.getTotalCount());
+  const storeCartCount = cartCount || useCartStore((state) => state.getTotalCount());
 
   const navLinks = [
     { path: '/', label: 'Trang chủ' },

@@ -6,7 +6,7 @@ export const quizService = {
    */
   async submitQuiz(answers) {
     return apiClient(
-      '/quiz/evaluate',
+      '/quiz/submit',
       {
         method: 'POST',
         body: JSON.stringify(answers)
