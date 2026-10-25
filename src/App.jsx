@@ -12,6 +12,7 @@ import SciencePage from './pages/SciencePage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 import ContactPage from './pages/ContactPage';
 import FaqPage from './pages/FaqPage';
+import AboutPage from './pages/AboutPage';
 import { useCartStore } from './store/cartStore';
 
 /**
@@ -221,7 +222,13 @@ export default function App() {
             element={<FaqPage />} 
           />
 
-          {/* 11. Fallback Route */}
+          {/* 11. Trang Giới Thiệu Dự Án */}
+          <Route 
+            path="/gioi-thieu" 
+            element={<AboutPage />} 
+          />
+
+          {/* 12. Fallback Route */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </MainLayout>

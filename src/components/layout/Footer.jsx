@@ -177,6 +177,15 @@ export default function Footer() {
                   Quiz tư vấn tình trạng đường ruột
                 </Link>
               </li>
+              <li>
+                <Link 
+                  className="hover:text-on-primary transition-colors flex items-center gap-1.5" 
+                  to="/gioi-thieu"
+                >
+                  <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                  Giới thiệu dự án Banova
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -161,7 +161,7 @@ export default function ArticleDetailPage({
                 </span>
                 Hệ Tiêu Hóa &amp; Nội Tiết
               </span>
-              <span className="text-label-sm text-outline hidden md:inline">• Mã hồ sơ: BNV-RES-2026-09</span>
+              <span className="font-label-sm text-label-sm text-outline hidden md:inline">• Mã hồ sơ: BNV-RES-2026-09</span>
             </div>
           </div>
         </div>
@@ -265,7 +265,7 @@ export default function ArticleDetailPage({
                     </span>
                     Chuẩn Y Sinh NFR-09
                   </span>
-                  <span className="text-label-sm text-outline ml-auto hidden sm:inline">Phân loại: Prebiotic Thể Rắn</span>
+                  <span className="font-label-sm text-label-sm text-outline ml-auto hidden sm:inline">Phân loại: Prebiotic Thể Rắn</span>
                 </div>
 
                 <h1 className="font-display-lg-mobile md:font-headline-xl text-primary font-bold tracking-tight">

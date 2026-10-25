@@ -14,6 +14,7 @@ export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang
     { path: '/khoa-hoc', label: 'Góc khoa học' },
     { path: '/quiz', label: 'Quiz tư vấn' },
     { path: '/faq', label: 'Hỏi đáp' },
+    { path: '/gioi-thieu', label: 'Giới thiệu' },
     { path: '/lien-he', label: 'Liên hệ' }
   ];
 
