@@ -21,14 +21,16 @@ export default function HomeHero({ onNavigate = () => {} }) {
               </span>
             </div>
 
-            {/* 2. Headline chính: câu ngắn, nhất quán font, không pill nền */}
+            {/* 2. Headline chính: Giải quyết triệt để lỗi gạch chân đứt quãng bằng khối pill gradient */}
             <div className="space-y-1">
-              <h1 className="font-headline-xl text-2xl sm:text-headline-lg lg:text-headline-xl text-primary font-bold tracking-tight leading-tight">
-                Bữa sáng no lâu, nhẹ đường huyết{' '}
-                <span className="text-secondary">cùng tinh bột kháng Banova</span>
+              <h1 className="font-headline-xl text-2xl sm:text-headline-lg lg:text-headline-xl text-primary font-extrabold tracking-tight leading-tight">
+                Khởi tạo sức khỏe đường ruột &amp; Cân bằng đường huyết với{' '}
+                <span className="inline-block text-secondary font-black bg-secondary-container/40 px-2.5 py-0.5 rounded-lg border border-secondary/20">
+                  Tinh Bột Kháng Banova
+                </span>
               </h1>
               <p className="font-body-md text-sm sm:text-body-md text-on-surface-variant leading-relaxed">
-                Tinh bột kháng RS2 từ chuối xanh Gia Lai, giúp bạn no lâu và hỗ trợ ổn định đường huyết sau ăn.
+                Giải pháp bổ sung Prebiotic RS2 tự nhiên sấy lạnh, nuôi dưỡng lợi khuẩn đại tràng tạo SCFA Butyrate, giúp no lâu và duy trì chỉ số đường huyết ổn định.
               </p>
             </div>
 
