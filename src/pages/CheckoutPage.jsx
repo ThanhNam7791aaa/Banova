@@ -291,25 +291,6 @@ export default function CheckoutPage({
               {/* ======================= STEP 1: XEM LẠI GIỎ HÀNG ======================= */}
               {currentStep === 1 && (
                 <div className="space-y-space-md animate-in fade-in duration-300">
-                  {/* Free Shipping Milestone Card */}
-                  <div className="bg-gradient-to-r from-secondary-container/40 via-surface-container-lowest to-secondary-container/20 p-space-md rounded-2xl border border-secondary/20 shadow-sm space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-secondary">
-                        <span className="material-symbols-outlined text-[22px]">local_shipping</span>
-                        <span className="font-label-md text-label-md font-bold">Đủ điều kiện Freeship Quy Nhơn &amp; Toàn quốc!</span>
-                      </div>
-                      <span className="font-label-sm text-label-sm bg-secondary text-on-secondary px-2.5 py-0.5 rounded-full font-bold">
-                        Tài trợ 100% Cước
-                      </span>
-                    </div>
-                    <div className="w-full bg-surface-container h-2.5 rounded-full overflow-hidden">
-                      <div className="bg-secondary h-full rounded-full transition-all duration-700" style={{ width: '100%' }} />
-                    </div>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant">
-                      Đơn hàng chứa dòng Tinh Bột Kháng Banova được đóng thùng bảo ôn 3 lớp chống ẩm tuyệt đối.
-                    </p>
-                  </div>
-
                   {/* Cart Products List */}
                   <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-container-highest/60 overflow-hidden">
                     <div className="p-space-md bg-surface-container-low/70 flex justify-between items-center border-b border-surface-container">
@@ -369,7 +350,7 @@ export default function CheckoutPage({
                                 <p className="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">
                                   {item.description || 'Sản phẩm dinh dưỡng vi sinh kháng tinh bột RS2'}
                                 </p>
-                                <div className="text-secondary font-bold font-label-md text-label-md sm:hidden mt-1">
+                                <div className="text-secondary font-bold font-label-md text-label-md sm:hidden mt-1 tabular-nums">
                                   {formatVND(item.price)}
                                 </div>
                               </div>
@@ -377,7 +358,7 @@ export default function CheckoutPage({
 
                             <div className="flex items-center justify-between w-full sm:w-auto gap-space-lg shrink-0">
                               <div className="hidden sm:block text-right">
-                                <span className="font-label-md text-label-md text-on-surface font-bold">
+                                <span className="font-label-md text-label-md text-on-surface font-bold tabular-nums">
                                   {formatVND(item.price)}
                                 </span>
                                 <span className="block font-body-sm text-[12px] text-on-surface-variant">Đơn giá</span>
@@ -406,7 +387,7 @@ export default function CheckoutPage({
 
                               {/* Thành tiền & Nút Xóa */}
                               <div className="text-right min-w-[100px]">
-                                <div className="font-headline-sm text-headline-sm text-primary font-extrabold font-mono">
+                                <div className="font-headline-sm text-headline-sm text-primary font-bold tabular-nums">
                                   {formatVND(item.price * item.quantity)}
                                 </div>
                                 <button 
@@ -465,71 +446,12 @@ export default function CheckoutPage({
                             </p>
                           </div>
                         </div>
-                        <span className="font-label-md text-label-md font-extrabold text-secondary font-mono">
+                        <span className="font-label-md text-label-md font-bold text-secondary tabular-nums">
                           0 ₫ (Miễn phí)
                         </span>
                       </div>
                     )}
                   </div>
-
-                  {/* Promo Code Section */}
-                  {cartItems.length > 0 && (
-                    <div className="space-y-space-xs">
-                      <div className="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm border border-surface-container-highest/60 flex flex-col sm:flex-row items-center justify-between gap-space-md">
-                        <div className="flex items-center gap-space-sm w-full sm:w-auto">
-                          <div className="w-10 h-10 rounded-xl bg-secondary-container/60 flex items-center justify-center text-secondary">
-                            <span className="material-symbols-outlined text-[22px]">sell</span>
-                          </div>
-                          <div>
-                            <p className="font-label-md text-label-md text-primary font-bold">Mã Voucher / Khuyến mãi</p>
-                            <p className="font-body-sm text-body-sm text-on-surface-variant">
-                              Nhập mã ưu đãi (Ví dụ: <strong className="text-secondary font-mono">BANOVAQUI</strong> hoặc <strong className="text-secondary font-mono">FREESHIP</strong>)
-                            </p>
-                          </div>
-                        </div>
-                        <form onSubmit={handleApplyCoupon} className="flex items-center gap-2 w-full sm:w-auto">
-                          <div className="relative flex-1 sm:w-64">
-                            <input 
-                              type="text"
-                              value={couponCode}
-                              onChange={(e) => setCouponCode(e.target.value)}
-                              placeholder="Nhập BANOVAQUI"
-                              className="w-full h-11 px-4 bg-surface-container-low border border-surface-container-highest rounded-xl text-on-surface font-label-md text-label-md focus:outline-none focus:border-secondary focus:bg-surface-container-lowest uppercase tracking-wider font-mono"
-                            />
-                          </div>
-                          <button 
-                            type="submit"
-                            className="h-11 px-space-md bg-secondary text-on-secondary rounded-xl font-label-md text-label-md hover:bg-secondary/90 transition-all font-bold shrink-0 shadow-sm cursor-pointer"
-                          >
-                            Áp dụng
-                          </button>
-                        </form>
-                      </div>
-
-                      {couponError && (
-                        <p className="text-error font-body-sm text-sm px-2">{couponError}</p>
-                      )}
-
-                      {/* Coupon Applied Badge Banner */}
-                      {couponApplied && (
-                        <div className="bg-secondary-container/40 border border-secondary/30 p-space-sm rounded-xl flex items-center justify-between">
-                          <div className="flex items-center gap-space-sm">
-                            <span className="material-symbols-outlined text-secondary">check_circle</span>
-                            <span className="font-label-md text-label-md text-primary font-bold">
-                              Mã <strong className="font-mono text-secondary">{couponCode || 'BANOVAQUI'}</strong> đã kích hoạt thành công: Miễn phí vận chuyển 100% toàn quốc
-                            </span>
-                          </div>
-                          <button 
-                            type="button"
-                            onClick={handleRemoveCoupon}
-                            className="font-label-sm text-label-sm text-on-surface-variant hover:text-error underline font-semibold cursor-pointer"
-                          >
-                            Bỏ chọn
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
 
                   {/* Thanh điều hướng thao tác Bước 1 */}
                   <div className="flex justify-between items-center pt-2">
@@ -862,7 +784,7 @@ export default function CheckoutPage({
                     <span className="material-symbols-outlined text-primary text-[22px]">receipt_long</span>
                     <h3 className="font-headline-sm text-headline-sm text-primary font-bold">Tóm tắt đơn hàng</h3>
                   </div>
-                  <span className="font-label-sm text-label-sm bg-primary-container text-on-primary px-3 py-1 rounded-full font-bold font-mono">
+                  <span className="font-label-sm text-label-sm bg-primary-container text-on-primary px-3 py-1 rounded-full font-bold tabular-nums">
                     {totalQty} sản phẩm
                   </span>
                 </div>
@@ -877,18 +799,59 @@ export default function CheckoutPage({
                           {item.quantity}x {item.name}
                         </span>
                       </div>
-                      <span className="font-bold text-primary font-mono text-sm shrink-0">
+                      <span className="font-bold text-primary text-sm shrink-0 font-label-md tabular-nums">
                         {formatVND(item.price * item.quantity)}
                       </span>
                     </div>
                   ))}
                 </div>
 
+                {/* Mã khuyến mãi */}
+                <div className="pt-2 border-t border-surface-container space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <span className="material-symbols-outlined text-secondary text-[18px]">sell</span>
+                    <span className="font-label-md text-label-md font-bold">Mã khuyến mãi</span>
+                  </div>
+                  <form onSubmit={handleApplyCoupon} className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Nhập BANOVAQUI"
+                      className="flex-1 h-10 px-3 bg-surface-container-low border border-surface-container-highest rounded-lg text-on-surface font-label-md text-[13px] focus:outline-none focus:border-secondary focus:bg-surface-container-lowest uppercase tracking-wider font-mono"
+                    />
+                    <button
+                      type="submit"
+                      className="h-10 px-3 bg-secondary text-on-secondary rounded-lg font-label-md text-[13px] hover:bg-secondary/90 transition-all font-bold shrink-0 shadow-sm cursor-pointer"
+                    >
+                      Áp dụng
+                    </button>
+                  </form>
+                  {couponError && (
+                    <p className="text-error font-body-sm text-[12px]">{couponError}</p>
+                  )}
+                  {couponApplied && (
+                    <div className="flex items-center justify-between gap-2 bg-secondary-container/40 border border-secondary/30 rounded-lg px-2.5 py-1.5">
+                      <span className="font-label-sm text-[12px] text-primary font-semibold flex items-center gap-1">
+                        <span className="material-symbols-outlined text-secondary text-[14px]">check_circle</span>
+                        Đã áp dụng: {couponCode || 'BANOVAQUI'} (Freeship)
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className="font-label-sm text-[12px] text-on-surface-variant hover:text-error underline font-semibold cursor-pointer"
+                      >
+                        Bỏ
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 {/* Bảng tính chi phí */}
                 <div className="space-y-2.5 pt-2 border-t border-surface-container text-body-sm">
                   <div className="flex justify-between items-center text-on-surface-variant">
                     <span>Tạm tính:</span>
-                    <span className="font-bold text-on-surface font-mono">{formatVND(subtotal)}</span>
+                    <span className="font-bold text-on-surface font-label-md tabular-nums">{formatVND(subtotal)}</span>
                   </div>
                   <div className="flex justify-between items-center text-on-surface-variant">
                     <span className="flex items-center gap-1">
@@ -896,13 +859,13 @@ export default function CheckoutPage({
                       <span className="material-symbols-outlined text-[16px] text-secondary" title="Freeship Quy Nhơn &amp; Toàn Quốc">info</span>
                     </span>
                     <div className="text-right">
-                      <span className="text-outline-variant line-through text-xs font-mono mr-1">30.000 ₫</span>
-                      <span className="text-secondary font-bold font-mono">0 ₫ (Freeship)</span>
+                      <span className="text-outline-variant line-through text-xs font-label-md tabular-nums mr-1">30.000 ₫</span>
+                      <span className="text-secondary font-bold font-label-md tabular-nums">0 ₫ (Freeship)</span>
                     </div>
                   </div>
                   <div className="flex justify-between items-center text-on-surface-variant">
                     <span>Giảm giá ({couponCode}):</span>
-                    <span className="text-secondary font-bold font-mono">
+                    <span className="text-secondary font-bold font-label-md tabular-nums">
                       {couponApplied ? '-0 ₫ (Freeship)' : '0 ₫'}
                     </span>
                   </div>
@@ -915,7 +878,7 @@ export default function CheckoutPage({
                   <div className="pt-space-sm mt-space-sm bg-surface-container-low p-space-md rounded-xl space-y-1 border border-surface-container">
                     <div className="flex justify-between items-baseline">
                       <span className="font-label-lg text-label-lg font-bold text-primary">Tổng thanh toán:</span>
-                      <span className="font-headline-lg text-[26px] font-extrabold text-primary-container tracking-tight font-mono">
+                      <span className="font-headline-lg text-[26px] font-bold text-primary-container tracking-tight tabular-nums">
                         {formatVND(finalTotal)}
                       </span>
                     </div>
@@ -947,7 +910,7 @@ export default function CheckoutPage({
                       handleSubmitOrder();
                     }
                   }}
-                  className="w-full py-4 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg font-bold tracking-wide shadow-xl hover:bg-primary transition-all flex items-center justify-center gap-2 group transform active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+                  className="w-full py-4 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg font-bold tracking-wide shadow-xl hover:bg-primary transition-all flex items-center justify-center gap-2 group transform active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:pointer-events-none tabular-nums"
                 >
                   <span className="material-symbols-outlined text-[22px] group-hover:rotate-12 transition-transform text-secondary-fixed">
                     lock_clock
@@ -986,18 +949,6 @@ export default function CheckoutPage({
                 </div>
               </div>
 
-              {/* Thông tin chứng thực nông nghiệp Gia Lai */}
-              <div className="bg-gradient-to-br from-surface-container-low to-secondary-container/20 border border-secondary/20 rounded-2xl p-space-md flex items-start gap-space-sm shadow-sm">
-                <div className="w-11 h-11 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                  <span className="material-symbols-outlined text-secondary-fixed text-[22px]">eco</span>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="font-label-md text-label-md font-bold text-primary">Chứng thực Nông nghiệp Cao nguyên Gia Lai</h4>
-                  <p className="font-body-sm text-[12px] text-on-surface-variant leading-relaxed">
-                    Quy trình sấy lạnh giữ tinh thể RS2 kháng tiêu hóa, thu hoạch từ chuối xanh thổ nhưỡng đất đỏ bazan Đak Đoa - Gia Lai ở độ già 75-80 ngày tuổi.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1179,7 +1130,7 @@ export default function CheckoutPage({
                             </p>
                           </div>
                         </div>
-                        <span className="font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-bold font-mono">
+                        <span className="font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container-highest text-on-surface-variant font-bold tabular-nums">
                           {orderSuccessData.paymentMethod === 'demo' ? 'Sandbox 0đ' : 'COD'}
                         </span>
                       </div>
@@ -1241,7 +1192,7 @@ export default function CheckoutPage({
                                   {item.rsTag || 'RS2 Tự nhiên từ chuối xanh Đak Đoa Gia Lai'}
                                 </p>
                               </div>
-                              <span className="font-headline-sm text-headline-sm text-[16px] text-primary font-bold font-mono">
+                              <span className="font-headline-sm text-headline-sm text-[16px] text-primary font-bold tabular-nums">
                                 {formatVND(item.price * item.quantity)}
                               </span>
                             </div>
@@ -1275,7 +1226,7 @@ export default function CheckoutPage({
                                 Liệu trình kích hoạt vi khuẩn tạo Butyrate
                               </p>
                             </div>
-                            <span className="font-label-lg text-label-lg text-secondary font-bold font-mono">0 ₫</span>
+                            <span className="font-label-lg text-label-lg text-secondary font-bold tabular-nums">0 ₫</span>
                           </div>
                         </div>
                       </div>
@@ -1285,17 +1236,17 @@ export default function CheckoutPage({
                     <div className="mt-space-lg pt-space-md space-y-space-xs border-t border-surface-container">
                       <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
                         <span>Tạm tính</span>
-                        <span className="text-on-surface font-semibold font-mono">{formatVND(orderSuccessData.subtotal)}</span>
+                        <span className="text-on-surface font-semibold font-label-md tabular-nums">{formatVND(orderSuccessData.subtotal)}</span>
                       </div>
                       <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
                         <span className="flex items-center gap-1">
                           Phí giao hàng <span className="text-secondary font-label-sm text-label-sm font-bold bg-secondary-container/50 px-1.5 rounded">Miễn phí (Quy Nhơn &amp; Toàn Quốc)</span>
                         </span>
-                        <span className="text-secondary font-semibold font-mono">0 ₫</span>
+                        <span className="text-secondary font-semibold font-label-md tabular-nums">0 ₫</span>
                       </div>
                       <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
                         <span>Giảm giá khuyến mãi ({couponCode})</span>
-                        <span className="text-on-surface font-semibold font-mono">-0 ₫</span>
+                        <span className="text-on-surface font-semibold font-label-md tabular-nums">-0 ₫</span>
                       </div>
                       <div className="flex justify-between font-body-md text-body-md text-on-surface-variant">
                         <span>Thuế GTGT (VAT) &amp; Phí bảo ôn</span>
@@ -1308,7 +1259,7 @@ export default function CheckoutPage({
                             Hình thức: {orderSuccessData.paymentMethod === 'demo' ? 'Đã đối soát giả lập Sandbox' : 'Thanh toán COD'}
                           </p>
                         </div>
-                        <span className="font-headline-lg text-headline-lg font-bold text-primary font-mono">
+                        <span className="font-headline-lg text-headline-lg font-bold text-primary tabular-nums">
                           {formatVND(orderSuccessData.finalTotal)}
                         </span>
                       </div>
