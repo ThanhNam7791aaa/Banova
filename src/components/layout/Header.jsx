@@ -6,7 +6,8 @@ export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const storeCartCount = cartCount || useCartStore((state) => state.getTotalCount());
+  const storeCartCount = useCartStore((state) => state.getTotalCount());
+  const displayCartCount = cartCount || storeCartCount;
 
   const navLinks = [
     { path: '/', label: 'Trang chủ' },
@@ -74,14 +75,14 @@ export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-space-xs p-1 rounded-xl bg-surface-container-low/70">
+        <nav className="hidden lg:flex items-center gap-0.5 p-1 rounded-xl bg-surface-container-low/70">
           {navLinks.map((link) => {
             const active = isLinkActive(link.path);
             return (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`font-label-lg text-label-lg px-space-md py-space-sm rounded-lg transition-all ${
+                className={`font-label-md text-[13px] px-2.5 py-2 rounded-lg transition-all whitespace-nowrap ${
                   active
                     ? 'bg-primary-container text-on-primary font-bold shadow-xs'
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
@@ -112,9 +113,9 @@ export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang
             className="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"
           >
             <span className="material-symbols-outlined text-[22px]">shopping_bag</span>
-            {storeCartCount > 0 && (
+            {displayCartCount > 0 && (
               <span className="absolute top-1 right-1 flex items-center justify-center w-5 h-5 rounded-full bg-secondary text-on-secondary font-label-sm text-[10px] ring-2 ring-surface-container-lowest font-bold shadow-xs">
-                {storeCartCount}
+                {displayCartCount}
               </span>
             )}
           </button>
@@ -122,18 +123,9 @@ export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang
           {/* CTA Nutrition Quiz */}
           <Link 
             to="/quiz"
-            className="hidden sm:inline-flex items-center justify-center px-space-lg py-space-sm rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-xs hover:bg-primary transition-all duration-200"
+            className="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-xl bg-primary-container text-on-primary font-label-md text-[13px] shadow-xs hover:bg-primary transition-all duration-200 whitespace-nowrap"
           >
             Tư vấn dinh dưỡng
-          </Link>
-
-          {/* User Profile */}
-          <Link
-            to="/lien-he"
-            aria-label="Tài khoản khách hàng"
-            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
-          >
-            <span className="material-symbols-outlined text-on-primary text-[18px]">person</span>
           </Link>
 
           {/* Mobile Menu Hamburger */}
