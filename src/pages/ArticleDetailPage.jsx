@@ -277,35 +277,39 @@ export default function ArticleDetailPage({
                 </p>
 
                 {/* Meta Author & Medical Reviewer Bar */}
-                <div className="pt-space-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md bg-surface-container-low p-space-md rounded-xl border border-surface-container">
-                  <div className="flex items-center gap-space-sm">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-primary-container shrink-0 shadow-xs border border-surface-container-highest">
-                      <img 
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqJtULaCBHoO9RN-R2oNCIviMfKbK1cmilS0VHXePb0ROSw01FLsueZ6ZacLxEmeLK6h_EnhvVQAoawWwqN-83jdzJWkMWcPcG-KMdwDEm6oT4bSe8ZIbYjgI41CM9t8UXAjCZ6H5F9gl2OgEmWXZjH_QzYGQxK1kbZSsyWGmtCL4CZyWwKc4PTeZwSRZC5yrGoTbnhMeppnwPi1wmcktEf8DJ6kHgAVARGXLL86MEHT_JzPqC86Jz" 
-                        alt="TS. Dược học Lê Minh Tuấn" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-label-lg text-primary font-bold">Banova Clinical Nutrition Team</span>
-                        <span className="material-symbols-outlined text-secondary text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                          verified
-                        </span>
+                <div className="pt-space-md">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-surface-container-low px-4 py-2.5 rounded-xl border border-surface-container">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-primary-container shrink-0 shadow-2xs border border-surface-container-highest">
+                        <img 
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqJtULaCBHoO9RN-R2oNCIviMfKbK1cmilS0VHXePb0ROSw01FLsueZ6ZacLxEmeLK6h_EnhvVQAoawWwqN-83jdzJWkMWcPcG-KMdwDEm6oT4bSe8ZIbYjgI41CM9t8UXAjCZ6H5F9gl2OgEmWXZjH_QzYGQxK1kbZSsyWGmtCL4CZyWwKc4PTeZwSRZC5yrGoTbnhMeppnwPi1wmcktEf8DJ6kHgAVARGXLL86MEHT_JzPqC86Jz" 
+                          alt="TS. Dược học Lê Minh Tuấn" 
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <p className="font-body-sm text-on-surface-variant">
-                        Hiệu đính y khoa: <strong className="text-on-surface font-semibold">TS. Dược học Lê Minh Tuấn</strong>
-                      </p>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 min-w-0">
+                        <div className="flex items-center gap-1 shrink-0">
+                          <span className="font-label-md text-primary font-bold">Banova Clinical Nutrition Team</span>
+                          <span className="material-symbols-outlined text-secondary text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                            verified
+                          </span>
+                        </div>
+                        <span className="text-outline text-xs hidden sm:inline">•</span>
+                        <p className="font-body-sm text-on-surface-variant whitespace-nowrap">
+                          Hiệu đính y khoa: <strong className="text-on-surface font-semibold">TS. Dược học Lê Minh Tuấn</strong>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-space-md font-body-sm text-outline text-right">
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">schedule</span>
-                      <span>5 phút đọc</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">calendar_today</span>
-                      <span>18 Tháng 10, 2026</span>
+                    <div className="flex items-center gap-3 font-body-sm text-outline shrink-0 whitespace-nowrap">
+                      <div className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[16px]">schedule</span>
+                        <span>5 phút đọc</span>
+                      </div>
+                      <span className="text-outline-variant">•</span>
+                      <div className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[16px]">calendar_today</span>
+                        <span>18 Tháng 10, 2026</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -335,8 +339,7 @@ export default function ArticleDetailPage({
               {/* Lead Paragraph */}
               <div className="space-y-space-md">
                 <p className="font-body-xl text-on-surface font-medium leading-relaxed bg-surface-container-lowest p-space-lg rounded-xl shadow-xs border border-surface-container">
-                  <span className="font-display-lg text-secondary float-left leading-none pr-3 pt-1 font-bold">T</span>
-                  ại Việt Nam, theo báo cáo dịch tễ học của Bộ Y Tế, tỷ lệ người trưởng thành mắc tiền đái tháo đường đang tăng với tốc độ báo động, gấp đôi số ca đái tháo đường thực thể. Đây là giai đoạn “vàng” mang tính bước ngoặt sinh học: tình trạng kháng insulin hoàn toàn có thể đảo ngược nếu can thiệp kịp thời vào chế độ dinh dưỡng và sự cân bằng trục vi sinh vật - đường ruột - nội tiết (Gut-Endocrine Axis).
+                  Tại Việt Nam, theo báo cáo dịch tễ học của Bộ Y Tế, tỷ lệ người trưởng thành mắc tiền đái tháo đường đang tăng với tốc độ báo động, gấp đôi số ca đái tháo đường thực thể. Đây là giai đoạn “vàng” mang tính bước ngoặt sinh học: tình trạng kháng insulin hoàn toàn có thể đảo ngược nếu can thiệp kịp thời vào chế độ dinh dưỡng và sự cân bằng trục vi sinh vật - đường ruột - nội tiết (Gut-Endocrine Axis).
                 </p>
               </div>
 
