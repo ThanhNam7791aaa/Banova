@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../../store/cartStore';
 
-export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang-chu', onNavigate = () => {} }) {
+export default function Header({ onOpenCart, cartCount = 0 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -96,15 +96,6 @@ export default function Header({ onOpenCart, cartCount = 0, currentPath = 'trang
 
         {/* Action Controls */}
         <div className="flex items-center gap-space-sm">
-          {/* Search Trigger */}
-          <Link
-            to="/khoa-hoc"
-            aria-label="Tìm kiếm thông tin khoa học" 
-            className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"
-          >
-            <span className="material-symbols-outlined text-[22px]">search</span>
-          </Link>
-
           {/* Cart Trigger */}
           <button 
             type="button"
