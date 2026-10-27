@@ -22,7 +22,7 @@ export default function HomePage({
       <ScienceOverview onNavigate={onNavigate} />
 
       {/* 3. Sản phẩm tiêu biểu (4 SKU) */}
-      <FeaturedProducts onNavigate={onNavigate} onAddToCart={onAddToCart} />
+      <FeaturedProducts onAddToCart={onAddToCart} />
 
       {/* 4. Banner trắc nghiệm Quiz tư vấn 1 phút */}
       <QuizTeaser onNavigate={onNavigate} />

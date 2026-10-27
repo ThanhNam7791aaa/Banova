@@ -53,7 +53,7 @@ export default function HomeHero({ onNavigate = () => {} }) {
                     <div>
                       <span className="font-label-sm text-[10px] text-on-surface-variant uppercase block">Hũ 500g nguyên chất</span>
                       <span className="font-headline-sm text-base font-extrabold text-primary font-mono leading-none">
-                        159.000 ₫
+                        159.000₫
                       </span>
                     </div>
                     <button
@@ -76,23 +76,22 @@ export default function HomeHero({ onNavigate = () => {} }) {
               </div>
               <div className="flex-1 text-body-sm text-[13px]">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-bold text-primary">Hũ 500g chỉ từ 159.000₫</span>
+                  <span className="font-bold text-primary">Hũ 500g: 159.000₫</span>
                   <span className="text-outline-variant">•</span>
                   <span className="text-secondary font-semibold">Hộp 10 gói: 69.000₫</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-secondary font-medium text-[12px] mt-0.5">
-                  <span className="material-symbols-outlined text-[15px]">bolt</span>
-                  <span>Giao hỏa tốc 2H tại TP. Quy Nhơn • Freeship toàn quốc</span>
+                <div className="text-on-surface-variant font-medium text-[12px] mt-0.5">
+                  Bột nguyên chất · Không đường · Không chất bảo quản
                 </div>
               </div>
             </div>
 
-            {/* 5. Action CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* 5. Action CTAs: xếp dọc full-width trên mobile để chữ không bị gãy dòng */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
               <button
                 type="button"
                 onClick={() => onNavigate('san-pham')}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-space-lg sm:px-space-xl py-3 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-primary transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-lg sm:px-space-xl py-3 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-primary transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
               >
                 <span>Xem sản phẩm &amp; Đặt mua</span>
                 <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
@@ -100,7 +99,7 @@ export default function HomeHero({ onNavigate = () => {} }) {
               <button
                 type="button"
                 onClick={() => onNavigate('quiz-tu-van')}
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-space-md py-3 rounded-xl bg-surface-container-lowest text-primary font-label-lg text-label-lg font-semibold shadow-xs hover:bg-surface-container-low transition-all border border-surface-container cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-md py-3 rounded-xl bg-surface-container-lowest text-primary font-label-lg text-label-lg font-semibold shadow-xs hover:bg-surface-container-low transition-all border border-surface-container cursor-pointer"
               >
                 <span className="material-symbols-outlined text-secondary text-[20px]">psychology_alt</span>
                 <span>Quiz tư vấn 1 phút</span>
@@ -110,12 +109,12 @@ export default function HomeHero({ onNavigate = () => {} }) {
             {/* 6. Hai chỉ số cốt lõi — bớt 4 thẻ để giảm nhiễu */}
             <div className="grid grid-cols-2 gap-2.5 pt-2 max-w-sm">
               <div className="p-2.5 rounded-xl bg-surface-container-lowest shadow-xs flex flex-col justify-center border border-surface-container">
-                <span className="font-headline-sm text-headline-sm text-primary font-extrabold leading-none">72%</span>
-                <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">RS2 Tự nhiên</span>
+                <span className="font-headline-sm text-headline-sm text-primary font-extrabold leading-none">5,8g</span>
+                <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">RS2 mỗi khẩu phần</span>
               </div>
               <div className="p-2.5 rounded-xl bg-surface-container-lowest shadow-xs flex flex-col justify-center border border-surface-container">
-                <span className="font-headline-sm text-headline-sm text-primary font-extrabold leading-none">&lt; 45</span>
-                <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">Chỉ số GI Thấp</span>
+                <span className="font-headline-sm text-headline-sm text-primary font-extrabold leading-none">&lt; 60°C</span>
+                <span className="font-label-sm text-[11px] text-on-surface-variant mt-1">Sấy lạnh giữ RS2</span>
               </div>
             </div>
 
@@ -136,18 +135,6 @@ export default function HomeHero({ onNavigate = () => {} }) {
                   e.target.src = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqa_jt624o8HUAT2L3DCgmIH8lj7JDzY9hEyCulc0vpxi-qJi76ezOhoCeTYetbjkV88S64vi8ZOK6J2qvOwHrF_K4_vl5WwDwTNtVJnU8AWwjytW2824ntI1ggSxngDqUFjSxdoLflmtjkAragjyo2GbHl-lfT5RPzBSGKW1AuR_ipWaDDPvgRs9KHe5yOFCYriNFuO0mYGPnX8BiHobBqWjmLifzB0hO60ver-rqpxtd2P1QedEF';
                 }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-transparent pointer-events-none" />
-              
-              {/* Floating Tag: Giá & Quy chuẩn trực tiếp */}
-              <div className="absolute bottom-4 right-4 p-2.5 px-3.5 rounded-xl bg-primary/95 backdrop-blur-md text-on-primary shadow-md flex items-center gap-2 border border-primary-container">
-                <span className="material-symbols-outlined text-secondary-fixed text-[20px]">sell</span>
-                <div className="flex flex-col text-right">
-                  <span className="font-label-sm text-[10px] uppercase text-primary-fixed-dim">Giá niêm yết</span>
-                  <span className="font-headline-sm text-headline-sm font-extrabold text-secondary-fixed font-mono leading-none">
-                    159.000 ₫
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
 

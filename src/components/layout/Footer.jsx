@@ -2,9 +2,21 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services';
 
+/**
+ * Danh sách kênh social ở chân trang.
+ * Lưu ý: chỉ dùng tên icon có thật trong bộ Material Symbols đang nạp,
+ * nếu không ligature sẽ hỏng và icon biến thành chữ (gây tràn ngang).
+ */
+const SOCIAL_LINKS = [
+  { label: 'Facebook', href: 'https://facebook.com', icon: 'public' },
+  { label: 'Zalo', href: 'https://zalo.me', icon: 'chat' },
+  { label: 'YouTube', href: 'https://youtube.com', icon: 'smart_display' },
+  { label: 'TikTok Shop', href: 'https://tiktok.com', icon: 'storefront' },
+  { label: 'Shopee', href: 'https://shopee.vn', icon: 'shopping_bag' }
+];
+
 export default function Footer() {
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState(null);
 
@@ -15,10 +27,8 @@ export default function Footer() {
       setFeedbackMsg(null);
       try {
         await api.newsletter.subscribe(email.trim());
-        setSubscribed(true);
         setFeedbackMsg('✓ Đã đăng ký nhận bản tin thành công!');
         setTimeout(() => {
-          setSubscribed(false);
           setFeedbackMsg(null);
         }, 4000);
         setEmail('');
@@ -227,21 +237,19 @@ export default function Footer() {
         <div className="pt-space-lg border-t border-primary-container flex flex-col md:flex-row items-center justify-between gap-space-md text-on-primary-container font-body-sm text-body-sm">
           <p>© 2026 Banova. Bản quyền thuộc về Banova Việt Nam. Dinh dưỡng tự nhiên từ chuối xanh Gia Lai.</p>
           <div className="flex items-center gap-space-sm">
-            <a aria-label="Facebook" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://facebook.com" target="_blank" rel="noreferrer">
-              <span className="material-symbols-outlined text-[18px]">public</span>
-            </a>
-            <a aria-label="Zalo" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://zalo.me" target="_blank" rel="noreferrer">
-              <span className="material-symbols-outlined text-[18px]">chat</span>
-            </a>
-            <a aria-label="YouTube" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://youtube.com" target="_blank" rel="noreferrer">
-              <span className="material-symbols-outlined text-[18px]">smart_display</span>
-            </a>
-            <a aria-label="TikTok Shop" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://tiktok.com" target="_blank" rel="noreferrer">
-              <span className="material-symbols-outlined text-[18px]">video_collection</span>
-            </a>
-            <a aria-label="Shopee" className="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary" href="https://shopee.vn" target="_blank" rel="noreferrer">
-              <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
-            </a>
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.label}
+                aria-label={social.label}
+                title={social.label}
+                className="w-9 h-9 shrink-0 rounded-full overflow-hidden bg-primary-container flex items-center justify-center hover:bg-secondary hover:text-on-secondary transition-colors text-on-primary"
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="material-symbols-outlined text-[18px] leading-none">{social.icon}</span>
+              </a>
+            ))}
           </div>
         </div>
       </div>

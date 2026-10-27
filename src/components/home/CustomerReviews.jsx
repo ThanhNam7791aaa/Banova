@@ -50,7 +50,7 @@ export default function CustomerReviews() {
     },
     {
       id: 'cert-4',
-      icon: 'block',
+      icon: 'spa',
       title: '100% Tự Nhiên (0% Phụ Gia)',
       desc: 'Không đường tinh luyện, không chất bảo quản'
     }
@@ -63,15 +63,11 @@ export default function CustomerReviews() {
         {/* Header phá vỡ rập khuôn: Căn trái kết hợp rating badge */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <div className="flex items-center text-on-tertiary-container">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    star
-                  </span>
-                ))}
-              </div>
-              <span className="font-label-md text-label-md font-bold text-primary">4.9/5 Đánh giá thực tế</span>
+            <div className="flex flex-wrap items-center gap-2 mb-1.5">
+              <span className="material-symbols-outlined text-secondary text-[18px]">forum</span>
+              <span className="font-label-md text-label-md font-bold text-primary">Chia sẻ từ người dùng</span>
+              <span className="text-outline-variant hidden sm:inline">•</span>
+              <span className="font-body-sm text-[12px] text-on-surface-variant">Nội dung do khách hàng cung cấp</span>
             </div>
             <h2 className="font-headline-lg text-headline-md sm:text-headline-lg text-primary font-extrabold tracking-tight">
               Phản Hồi Từ Người Dùng Banova Hằng Ngày
@@ -89,7 +85,7 @@ export default function CustomerReviews() {
               key={item.id} 
               className="p-5 rounded-2xl bg-surface-container-lowest shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-4 border border-surface-container"
             >
-              <p className="font-body-md text-body-sm text-on-surface italic leading-relaxed">
+              <p className="font-body-md text-body-sm sm:text-body-md text-on-surface italic leading-relaxed">
                 {item.content}
               </p>
 
